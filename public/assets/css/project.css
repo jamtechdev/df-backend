@@ -1,0 +1,12 @@
+/* Project Page Custom Styles */
+#openCreateProjectModal {
+    transition: all 0.3s ease-in-out;
+}
+
+#openCreateProjectModal:hover {
+    background-color: #e7e7e7;
+}
+
+#formError {
+    font-size: 14px;
+}
