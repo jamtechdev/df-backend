@@ -57,7 +57,7 @@
         <div class="row min-vh-100">
 
             <!-- ===================== Sidebar ===================== -->
-            <div class="col-md-3 col-lg-2 p-0">
+            <div class="col-md-3 col-lg-2 border-end">
                 @include('layouts.sidebar')
             </div>
 
@@ -68,13 +68,13 @@
                 </div>
 
                 <!-- Page Content Area -->
-                <div class="my-4 flex-grow-1">
+                <div class="mt-4 flex-grow-1 card">
                     @yield('content')
                 </div>
 
 
                 <!-- Footer Section -->
-                <div class="mt-auto footer-dc">
+                <div class="mt-auto py-4">
                     @include('layouts.footer')
                 </div>
             </main>

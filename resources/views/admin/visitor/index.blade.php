@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="mt-4">
-    <div class="card border-0">
-        <div class="card-header tbl-nme-head d-flex justify-content-between align-items-center">
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h4>Visitors</h4>
         </div>
         <div class="card-body">
-            <table class="table table-striped-custom table-responsive" id="visitors-table">
+            <table class="table" id="visitors-table">
                 <thead>
                     <tr>
                         <th>ID</th>
