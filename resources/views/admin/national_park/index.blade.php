@@ -16,6 +16,10 @@
                         <th>Theme</th>
                         <th>Name</th>
                         <th>Slug</th>
+                        <th>SEO Title</th>
+                        <th>SEO Description</th>
+                        <th>SEO Keywords</th>
+                        <th>Featured</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -29,43 +33,53 @@
 
 <!-- Create/Edit Modal -->
 <div class="modal fade" id="nationalParkModal" tabindex="-1" aria-labelledby="nationalParkModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog">
-    <form id="nationalParkForm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="nationalParkModalLabel">Add/Edit National Park</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
-        </div>
-        <div class="modal-body">
-            <input type="hidden" id="nationalParkId" name="nationalParkId" value="">
-            <div class="mb-3">
-                <label for="category_id" class="form-label">Category<span class="text-danger">*</span></label>
-                <select class="form-select" id="category_id" name="category_id" required>
-                    <option value="">Select Category</option>
-                </select>
+    <div class="modal-dialog">
+        <form id="nationalParkForm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nationalParkModalLabel">Add/Edit National Park</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="nationalParkId" name="nationalParkId" value="">
+                    <div class="mb-3">
+                        <label for="category_id" class="form-label">Category<span class="text-danger">*</span></label>
+                        <select class="form-select" id="category_id" name="category_id" required>
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="theme_id" class="form-label">Theme<span class="text-danger">*</span></label>
+                        <select class="form-select" id="theme_id" name="theme_id" required>
+                            <option value="">Select Theme</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" required maxlength="255">
+                    </div>
+                    <!-- Removed slug input as slug will be auto-generated -->
+                    <div class="mb-3">
+                        <label for="seo_title" class="form-label">SEO Title</label>
+                        <input type="text" class="form-control" id="seo_title" name="seo_title" maxlength="255">
+                    </div>
+                    <div class="mb-3">
+                        <label for="seo_description" class="form-label">SEO Description</label>
+                        <input type="text" class="form-control" id="seo_description" name="seo_description" maxlength="255">
+                    </div>
+                    <div class="mb-3">
+                        <label for="seo_keywords" class="form-label">SEO Keywords</label>
+                        <input type="text" class="form-control" id="seo_keywords" name="seo_keywords" maxlength="255">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="theme_id" class="form-label">Theme<span class="text-danger">*</span></label>
-                <select class="form-select" id="theme_id" name="theme_id" required>
-                    <option value="">Select Theme</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="name" name="name" required maxlength="255">
-            </div>
-            <div class="mb-3">
-                <label for="slug" class="form-label">Slug<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="slug" name="slug" required maxlength="255">
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelBtn">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
-        </div>
-      </div>
-    </form>
-  </div>
+        </form>
+    </div>
 </div>
 
 <!-- Loader -->
@@ -84,9 +98,5 @@
 
 @push('scripts')
 <script src="{{ asset('assets/js/national_parks.js') }}"></script>
-<script>
-    var categories = {!! json_encode(App\Models\Category::all()) !!};
-    var themes = {!! json_encode(App\Models\Theme::all()) !!};
-</script>
-@endpush
 
+@endpush

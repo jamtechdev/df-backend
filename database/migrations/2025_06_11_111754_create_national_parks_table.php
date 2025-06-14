@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('national_parks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id');
-             $table->string('name', 200);
+            $table->string('name', 200);
             $table->string('slug')->unique();
             $table->unsignedBigInteger('theme_id')->nullable();
 
@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('seo_title')->nullable();
             $table->string('seo_description')->nullable();
             $table->string('seo_keywords')->nullable(); // comma separated keywords
+
+            $table->boolean('is_featured')->default(0);
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('theme_id')->references('id')->on('themes')->onDelete('set null');

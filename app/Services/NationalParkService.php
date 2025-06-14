@@ -8,7 +8,7 @@ class NationalParkService
 {
     public function getAllNationalParks()
     {
-        return NationalPark::all();
+        return NationalPark::with(['category.translations', 'theme'])->get();
     }
 
     public function getNationalParkById($id)

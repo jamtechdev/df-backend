@@ -21,56 +21,68 @@ class ProjectUserController extends Controller
 
     public function index()
     {
-        return view('admin.project.user.index');
+        try {
+            return view('admin.project.user.index');
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to load project user index: ' . $e->getMessage()], 500);
+        }
     }
 
     public function fetchData()
     {
-        $data = $this->projectUserService->fetchData();
+        try {
+            $data = $this->projectUserService->fetchData();
 
-        $projectUserRoles = DB::table('project_user')
-            ->join('projects', 'projects.id', '=', 'project_user.project_id')
-            ->join('users', 'users.id', '=', 'project_user.user_id')
-            ->select(
-                'project_user.id',
-                'projects.id as project_id',
-                'projects.name as project_name',
-                'users.id as user_id',
-                DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"),
-                'users.email',
-                'project_user.role'
-            )
-            ->get();
+            $projectUserRoles = \DB::table('project_user')
+                ->join('projects', 'projects.id', '=', 'project_user.project_id')
+                ->join('users', 'users.id', '=', 'project_user.user_id')
+                ->select(
+                    'project_user.id',
+                    'projects.id as project_id',
+                    'projects.name as project_name',
+                    'users.id as user_id',
+                    \DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"),
+                    'users.email',
+                    'project_user.role'
+                )
+                ->get();
 
-        $users = DB::table('users')
-            ->select('id', 'first_name', 'last_name')
-            ->get();
+            $users = \DB::table('users')
+                ->select('id', 'first_name', 'last_name')
+                ->get();
 
-        return response()->json([
-            'project_user_roles' => $projectUserRoles,
-            'users' => $users,
-        ]);
+            return response()->json([
+                'project_user_roles' => $projectUserRoles,
+                'users' => $users,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch project user data: ' . $e->getMessage()], 500);
+        }
     }
 
 
     public function getUserRoles($userId)
     {
-        $user = User::findOrFail($userId);
-        $roles = $user->getRoleNames(); // Spatie roles
-        return response()->json(['roles' => $roles]);
+        try {
+            $user = User::findOrFail($userId);
+            $roles = $user->getRoleNames(); // Spatie roles
+            return response()->json(['roles' => $roles]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch user roles: ' . $e->getMessage()], 500);
+        }
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'project_id' => 'required|exists:projects,id',
-            'user_id' => 'required|exists:users,id',
-        ]);
-
         try {
+            $validated = $request->validate([
+                'project_id' => 'required|exists:projects,id',
+                'user_id' => 'required|exists:users,id',
+            ]);
+
             $this->projectUserService->assignUserToProject($validated);
             return response()->json(['message' => 'User assigned successfully']);
-        } catch (QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() === '23000') { // Duplicate entry error code
                 return response()->json(['message' => 'This user is already assigned to this project.'], 422);
             }
@@ -82,12 +94,12 @@ class ProjectUserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'project_id' => 'required|exists:projects,id',
-            'user_id' => 'required|exists:users,id',
-        ]);
-
         try {
+            $validated = $request->validate([
+                'project_id' => 'required|exists:projects,id',
+                'user_id' => 'required|exists:users,id',
+            ]);
+
             $this->projectUserService->syncUserToProject($validated, $id);
             return response()->json(['message' => 'User updated successfully']);
         } catch (\Exception $e) {

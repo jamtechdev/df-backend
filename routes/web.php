@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('national-parks')->group(function () {
         Route::get('/', [NationalParkController::class, 'index'])->name('national-parks.index');
         Route::get('/fetch-data', [NationalParkController::class, 'fetchData'])->name('national-parks.fetchData');
+        Route::get('/fetch-categories-themes', [NationalParkController::class, 'fetchCategoriesAndThemes'])->name('national-parks.fetchCategoriesAndThemes');
         Route::get('/create', [NationalParkController::class, 'create'])->name('national-parks.create');
         Route::post('/', [NationalParkController::class, 'store'])->name('national-parks.store');
         Route::get('/{id}/edit', [NationalParkController::class, 'edit'])->name('national-parks.edit');

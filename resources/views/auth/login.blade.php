@@ -8,7 +8,7 @@
 
                     {{-- Logo and Project Name --}}
                     <div class="mb-4">
-                        <img src="{{ asset('img/df.png') }}" alt="Logo" width="80" height="80" class="mb-2">
+                        <img src="{{ asset('img/df.png') }}" alt="Logo" width="auto" height="100" class="mb-2">
                         <h4 class="fw-bold rounded-2xl">{{ config('app.name', 'My Project') }}</h4>
                     </div>
 
