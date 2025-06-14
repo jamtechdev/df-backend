@@ -56,6 +56,7 @@ $(document).ready(function () {
                 <button class="btn btn-sm btn-danger delete-btn" 
                     data-project="${data.project_id}" 
                     data-user="${data.user_id}">
+                    <i class="fa-solid fa-trash me-2"></i>
                     Delete
                 </button>
             </td>

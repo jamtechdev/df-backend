@@ -25,7 +25,7 @@ $(document).ready(function () {
                 </td>
                 <td>${new Date(visitor.created_at).toLocaleString()}</td>
                 <td>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="${visitor.id}">Delete</button>
+                    <button class="btn btn-sm btn-danger delete-btn" data-id="${visitor.id}"><i class="fa-solid fa-trash me-2"></i>Delete</button>
                 </td>
             </tr>`;
         });

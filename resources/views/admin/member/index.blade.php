@@ -2,12 +2,13 @@
 
 @section('content')
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>Members</h4>
-            <button class="btn btn-primary" id="openCreateMemberModal">Add Member</button>
+            <button class="btn btn-primary" id="openCreateMemberModal"><i class="fa-solid fa-plus me-2"></i>Add Member</button>
         </div>
-        <div class="card-body">
+        <div class="theme-table">
             <table class="table" id="membersTable">
                 <thead>
                     <tr>
@@ -21,6 +22,7 @@
                 </thead>
                 <tbody id="membersTableBody"></tbody>
             </table>
+        </div>
         </div>
     </div>
 </div>

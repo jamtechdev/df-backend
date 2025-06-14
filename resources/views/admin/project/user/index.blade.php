@@ -2,12 +2,12 @@
 
 @section('content')
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between">
+    <div class="row">
+       <div class="col-md-12">
+         <div class="d-flex justify-content-between mb-3">
             <h4>Projects & Assigned Users</h4>
-          
         </div>
-        <div class="card-body">
+        <div class="theme-table">
             <table class="table" id="projectTable">
                 <thead>
                     <tr>
@@ -22,6 +22,7 @@
                 <tbody id="projectTableBody"></tbody>
             </table>
         </div>
+       </div>
     </div>
 </div>
 

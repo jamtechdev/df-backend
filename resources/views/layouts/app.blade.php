@@ -25,13 +25,17 @@
     <style>
         #globalLoader {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(255, 255, 255, 0.95);
             z-index: 9999;
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
         .loader-circle {
             border: 8px solid #f3f3f3;
             border-top: 8px solid #007bff;
@@ -40,9 +44,15 @@
             height: 70px;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -53,28 +63,28 @@
         <div class="loader-circle"></div>
     </div>
 
-    <div class="container-fluid">
-        <div class="row min-vh-100">
+    <!-- <div class="container-fluid">
+        <div class="row min-vh-100"> -->
 
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 border-end">
+            <!-- <div class="sidebar"> -->
                 @include('layouts.sidebar')
-            </div>
+            <!-- </div> -->
 
             <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 d-flex flex-column min-vh-100">
-                <div class="mt-2">
+            <main class="content">
+                <div class="">
                     @include('layouts.navigation')
                 </div>
-                <div class="mt-4 flex-grow-1 card">
+                <div class="">
                     @yield('content')
                 </div>
-                <div class="mt-auto py-4">
+                <div class="footer">
                     @include('layouts.footer')
                 </div>
             </main>
-        </div>
-    </div>
+        <!-- </div>
+    </div> -->
 
     <!-- JS CDN -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -87,10 +97,10 @@
     <!-- Loader JS -->
     <script>
         // Ensure loader stays at least 500ms (or adjust here)
-        window.addEventListener('load', function() {
-            setTimeout(function() {
+        window.addEventListener('load', function () {
+            setTimeout(function () {
                 const loader = document.getElementById('globalLoader');
-                if(loader){
+                if (loader) {
                     loader.style.display = 'none';
                 }
             }, 500); // 500ms delay
@@ -98,17 +108,32 @@
 
         // Ajax Loader Handling
         $(document).on({
-            ajaxStart: function() { $('#globalLoader').show(); },
-            ajaxStop: function() {
+            ajaxStart: function () { $('#globalLoader').show(); },
+            ajaxStop: function () {
                 // same delay for AJAX loader hide
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#globalLoader').hide();
                 }, 500); // adjust delay if needed
             }
+        });
+
+        $(document).ready(function () {
+            // Show sidebar on button click (hamburger)
+            $('#toggleSidebarBtn').on('click', function () {
+                $('#layout-menu').addClass('sidebar-visible');
+                $('body').addClass('sidebar-visible');
+            });
+
+            // Hide sidebar on 'X' button click
+            $('#closeSidebarBtn').on('click', function () {
+                $('#layout-menu').removeClass('sidebar-visible');
+                $('body').removeClass('sidebar-visible');
+            });
         });
     </script>
 
     @stack('scripts')
     @include('layouts._toasts')
 </body>
+
 </html>
