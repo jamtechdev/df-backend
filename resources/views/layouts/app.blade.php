@@ -56,7 +56,7 @@
     <div class="container-fluid">
         <div class="row min-vh-100">
 
-            <!-- ===================== Sidebar ===================== -->
+            <!-- Sidebar -->
             <div class="col-md-3 col-lg-2 border-end">
                 @include('layouts.sidebar')
             </div>
@@ -66,14 +66,9 @@
                 <div class="mt-2">
                     @include('layouts.navigation')
                 </div>
-
-                <!-- Page Content Area -->
                 <div class="mt-4 flex-grow-1 card">
                     @yield('content')
                 </div>
-
-
-                <!-- Footer Section -->
                 <div class="mt-auto py-4">
                     @include('layouts.footer')
                 </div>
