@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-5">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between">
+<div class="mt-4">
+    <div class="card border-0">
+        <div class="card-header tbl-nme-head d-flex justify-content-between align-items-center">
             <h4>Projects & Assigned Users</h4>
           
         </div>
         <div class="card-body">
-            <table class="table" id="projectTable">
+            <table class="table table-striped-custom table-responsive" id="projectTable">
                 <thead>
                     <tr>
                         <th>#</th>
