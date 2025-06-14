@@ -2,12 +2,13 @@
 
 @section('content')
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>National Parks</h4>
-            <button id="btnAdd" class="btn btn-primary">Add New National Park</button>
+            <button id="btnAdd" class="btn btn-primary"><i class="fa-solid fa-plus me-2"></i>Add New National Park</button>
         </div>
-        <div class="card-body">
+        <div class="theme-table">
             <table class="table" id="nationalParksTable">
                 <thead>
                     <tr>
@@ -27,6 +28,7 @@
                     <!-- Data will be populated by JS -->
                 </tbody>
             </table>
+        </div>
         </div>
     </div>
 </div>

@@ -44,8 +44,8 @@ $(document).ready(function () {
                 <td>${member.email}</td>
                 <td>${roles}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary edit-btn" data-id="${member.id}">Edit</button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="${member.id}">Delete</button>
+                    <button class="btn btn-sm btn-primary edit-btn" data-id="${member.id}"><i class="fa-solid fa-pen-to-square me-2"></i>Edit</button>
+                    <button class="btn btn-sm btn-danger delete-btn" data-id="${member.id}"><i class="fa-solid fa-trash me-2"></i>Delete</button>
                 </td>
             </tr>`;
         });

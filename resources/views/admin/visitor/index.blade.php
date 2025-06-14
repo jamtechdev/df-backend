@@ -2,11 +2,12 @@
 
 @section('content')
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>Visitors</h4>
         </div>
-        <div class="card-body">
+        <div class="theme-table">
             <table class="table" id="visitors-table">
                 <thead>
                     <tr>
@@ -23,6 +24,7 @@
                     <!-- Data will be populated by JS -->
                 </tbody>
             </table>
+        </div>
         </div>
     </div>
 </div>
