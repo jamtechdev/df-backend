@@ -69,8 +69,8 @@ $(document).ready(function() {
                         '<td>' + (park.seo_keywords || '') + '</td>' +
                     '<td><div class="form-check form-switch"><input type="checkbox" class="form-check-input is-featured-toggle" data-id="' + park.id + '" ' + isFeaturedChecked + '></div></td>' +
                         '<td>' +
-                        '<button class="btn btn-sm btn-info btn-edit" data-id="' + park.id + '">Edit</button> ' +
-                        '<button class="btn btn-sm btn-danger btn-delete" data-id="' + park.id + '">Delete</button>' +
+                        '<button class="btn btn-sm btn-info btn-edit" data-id="' + park.id + '"><i class="fa-solid fa-pen-to-square me-2"></i>Edit</button>' +
+                        '<button class="btn btn-sm btn-danger btn-delete" data-id="' + park.id + '"><i class="fa-solid fa-trash me-2"></i>Delete</button>' +
                         '</td>' +
                         '</tr>';
                     tbody.append(row);

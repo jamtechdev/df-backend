@@ -43,7 +43,7 @@
 
     </style>
 
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <!-- <h2 class="mb-4 fw-bold text-center text-dark">Dashboard Overview</h2> -->
         <div class="row g-4 justify-content-center">
 

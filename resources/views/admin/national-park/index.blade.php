@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-5">
+<div class="container-fluid mt-5">
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -12,17 +12,6 @@
             <table class="table" id="nationalParksTable">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Category</th>
-                        <th>Theme</th>
-                        <th>Name</th>
-                        <th>Slug</th>
-                        <th>SEO Title</th>
-                        <th>SEO Description</th>
-                        <th>SEO Keywords</th>
-                        <th>Featured</th>
-                        <th>Actions</th>
-                    </tr>
                 </thead>
                 <tbody>
                     <!-- Data will be populated by JS -->
@@ -99,6 +88,6 @@
 
 
 @push('scripts')
-<script src="{{ asset('assets/js/national_parks.js') }}"></script>
+<script src="{{ asset('assets/js/national-parks.js') }}"></script>
 
 @endpush

@@ -40,7 +40,7 @@ class NationalParkController extends Controller
         try {
             $categories = Category::all();
             $themes = Theme::all();
-            return view('admin.national_park.index', compact('categories', 'themes'));
+            return view('admin.national-park.index', compact('categories', 'themes'));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to load national parks index: ' . $e->getMessage()], 500);
         }
@@ -61,7 +61,7 @@ class NationalParkController extends Controller
         try {
             $categories = Category::all();
             $themes = Theme::all();
-            return view('admin.national_park.create', compact('categories', 'themes'));
+            return view('admin.national-park.create', compact('categories', 'themes'));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to load create national park form: ' . $e->getMessage()], 500);
         }
@@ -105,7 +105,7 @@ class NationalParkController extends Controller
                 ]);
             }
 
-            return view('admin.national_park.edit', compact('nationalPark', 'categories', 'themes'));
+            return view('admin.national-park.edit', compact('nationalPark', 'categories', 'themes'));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch national park data: ' . $e->getMessage()], 500);
         }
