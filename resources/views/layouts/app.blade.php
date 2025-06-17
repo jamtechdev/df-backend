@@ -12,11 +12,21 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <!-- Global & Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/global.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+    <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+    <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .dz-preview .dz-image img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover;
+        }
+    </style>
+
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
@@ -66,24 +76,24 @@
     <!-- <div class="container-fluid">
         <div class="row min-vh-100"> -->
 
-            <!-- Sidebar -->
-            <!-- <div class="sidebar"> -->
-                @include('layouts.sidebar')
-            <!-- </div> -->
+    <!-- Sidebar -->
+    <!-- <div class="sidebar"> -->
+    @include('layouts.sidebar')
+    <!-- </div> -->
 
-            <!-- Main Content -->
-            <main class="content">
-                <div class="">
-                    @include('layouts.navigation')
-                </div>
-                <div class="">
-                    @yield('content')
-                </div>
-                <div class="footer">
-                    @include('layouts.footer')
-                </div>
-            </main>
-        <!-- </div>
+    <!-- Main Content -->
+    <main class="content">
+        <div class="">
+            @include('layouts.navigation')
+        </div>
+        <div class="">
+            @yield('content')
+        </div>
+        <div class="footer">
+            @include('layouts.footer')
+        </div>
+    </main>
+    <!-- </div>
     </div> -->
 
     <!-- JS CDN -->
@@ -93,45 +103,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <!-- Loader JS -->
-    <script>
-        // Ensure loader stays at least 500ms (or adjust here)
-        window.addEventListener('load', function () {
-            setTimeout(function () {
-                const loader = document.getElementById('globalLoader');
-                if (loader) {
-                    loader.style.display = 'none';
-                }
-            }, 500); // 500ms delay
-        });
-
-        // Ajax Loader Handling
-        $(document).on({
-            ajaxStart: function () { $('#globalLoader').show(); },
-            ajaxStop: function () {
-                // same delay for AJAX loader hide
-                setTimeout(function () {
-                    $('#globalLoader').hide();
-                }, 500); // adjust delay if needed
-            }
-        });
-
-        $(document).ready(function () {
-            // Show sidebar on button click (hamburger)
-            $('#toggleSidebarBtn').on('click', function () {
-                $('#layout-menu').addClass('sidebar-visible');
-                $('body').addClass('sidebar-visible');
-            });
-
-            // Hide sidebar on 'X' button click
-            $('#closeSidebarBtn').on('click', function () {
-                $('#layout-menu').removeClass('sidebar-visible');
-                $('body').removeClass('sidebar-visible');
-            });
-        });
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+  
+    <script src="{{asset('assets/js/global.js')}}"></script>
     @stack('scripts')
     @include('layouts._toasts')
 </body>

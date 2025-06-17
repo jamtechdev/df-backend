@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CategoryTranslationsTableSeeder extends Seeder
 {
@@ -12,44 +13,45 @@ class CategoryTranslationsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        // Assuming the category IDs are 1, 2, 3 as inserted in CategoriesTableSeeder
-        DB::table('category_translations')->insert([
+        $categoriesData = [
             [
-                'category_id' => 1,
                 'language_code' => 'en',
-                'name' => 'Nature',
+                'name' => 'National Parks',
                 'description' => 'Explore the beauty of nature.',
+                'icon' => 'leaf',
+                'is_active' => true,
             ],
             [
-                'category_id' => 2,
                 'language_code' => 'en',
-                'name' => 'History',
+                'name' => 'Marine Sanctuaries',
                 'description' => 'Discover historical places and stories.',
+                'icon' => 'book',
+                'is_active' => true,
             ],
             [
-                'category_id' => 3,
                 'language_code' => 'en',
-                'name' => 'Adventure',
+                'name' => 'Wild Life',
                 'description' => 'Experience thrilling adventures.',
+                'icon' => 'mountain',
+                'is_active' => true,
             ],
-            [
-                'category_id' => 1,
-                'language_code' => 'es',
-                'name' => 'Naturaleza',
-                'description' => 'Explora la belleza de la naturaleza.',
-            ],
-            [
-                'category_id' => 2,
-                'language_code' => 'es',
-                'name' => 'Historia',
-                'description' => 'Descubre lugares e historias históricas.',
-            ],
-            [
-                'category_id' => 3,
-                'language_code' => 'es',
-                'name' => 'Aventura',
-                'description' => 'Experimenta aventuras emocionantes.',
-            ],
-        ]);
+        ];
+
+        foreach ($categoriesData as $data) {
+            // Insert into categories table
+            $categoryId = DB::table('categories')->insertGetId([
+                'slug' => Str::slug($data['name']),
+                'icon' => $data['icon'],
+                'is_active' => $data['is_active'],
+            ]);
+
+            // Insert into category_translations table
+            DB::table('category_translations')->insert([
+                'category_id' => $categoryId,
+                'language_code' => $data['language_code'],
+                'name' => $data['name'],
+                'description' => $data['description'],
+            ]);
+        }
     }
 }

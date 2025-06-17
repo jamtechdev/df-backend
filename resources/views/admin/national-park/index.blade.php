@@ -5,19 +5,27 @@
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>National Parks</h4>
-            <button id="btnAdd" class="btn btn-primary"><i class="fa-solid fa-plus me-2"></i>Add New National Park</button>
-        </div>
-        <div class="theme-table">
-            <table class="table" id="nationalParksTable">
-                <thead>
-                    <tr>
-                </thead>
-                <tbody>
-                    <!-- Data will be populated by JS -->
-                </tbody>
-            </table>
-        </div>
+                <h4>National Parks</h4>
+                <button id="btnAdd" class="btn btn-primary"><i class="fa-solid fa-plus me-2"></i>Add New National Park</button>
+            </div>
+            <div class="theme-table">
+                <table class="table" id="nationalParksTable">
+                    <thead>
+                        <tr>
+                            <th>Default Theme</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Featured</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -33,12 +41,7 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="nationalParkId" name="nationalParkId" value="">
-                    <div class="mb-3">
-                        <label for="category_id" class="form-label">Category<span class="text-danger">*</span></label>
-                        <select class="form-select" id="category_id" name="category_id" required>
-                            <option value="">Select Category</option>
-                        </select>
-                    </div>
+
                     <div class="mb-3">
                         <label for="theme_id" class="form-label">Theme<span class="text-danger">*</span></label>
                         <select class="form-select" id="theme_id" name="theme_id" required>
@@ -56,11 +59,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="seo_description" class="form-label">SEO Description</label>
-                        <input type="text" class="form-control" id="seo_description" name="seo_description" maxlength="255">
+                        <textarea name="seo_description" class="form-control" id="seo_description" rows="5"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="seo_keywords" class="form-label">SEO Keywords</label>
-                        <input type="text" class="form-control" id="seo_keywords" name="seo_keywords" maxlength="255">
+                        <label for="seo_keywords" class="form-label">SEO Keywords (comma seprated)</label>
+                        <textarea name="seo_keywords" class="form-control" id="seo_keywords" rows="5"></textarea>
                     </div>
 
                 </div>

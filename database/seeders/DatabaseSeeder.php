@@ -18,8 +18,9 @@ class DatabaseSeeder extends Seeder
             ThemesTableSeeder::class,
             ProjectsTableSeeder::class,
             MenusTableSeeder::class,
-            CategoriesTableSeeder::class,
             CategoryTranslationsTableSeeder::class,
+            NationalParkSeeder::class,
+            ContentBlocksTableSeeder::class,
         ]);
     }
 }

@@ -71,7 +71,7 @@ class NationalParkController extends Controller
     {
         try {
             $validated = $request->validate([
-                'category_id' => 'required|exists:categories,id',
+             
                 'theme_id' => 'required|exists:themes,id',
                 'name' => 'required|string|max:255',
                 'seo_title' => 'nullable|string|max:255',
@@ -81,9 +81,8 @@ class NationalParkController extends Controller
             ]);
 
             $validated['slug'] = $this->generateUniqueSlug($validated['name']);
-
+            $validated['category_id'] = 1;
             $nationalPark = \App\Models\NationalPark::create($validated);
-
             return response()->json(['message' => 'National Park created successfully', 'nationalPark' => $nationalPark]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to create national park: ' . $e->getMessage()], 500);
@@ -117,7 +116,6 @@ class NationalParkController extends Controller
             $nationalPark = \App\Models\NationalPark::findOrFail($id);
 
             $validated = $request->validate([
-                'category_id' => 'required|exists:categories,id',
                 'theme_id' => 'required|exists:themes,id',
                 'name' => 'required|string|max:255',
                 'seo_title' => 'nullable|string|max:255',

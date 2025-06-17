@@ -17,20 +17,20 @@ return new class extends Migration {
             $table->string('language_code', 5);
             $table->enum('status', ['draft', 'published'])->default('draft');
             $table->unsignedBigInteger('theme_id')->nullable();
-            $table->string('lead_quote')->nullable();
+            $table->longText('lead_quote')->nullable();
             $table->string('title');
             $table->string('subtitle')->nullable();
             $table->longText('intro_text_first')->nullable();
+            $table->json('park_stats')->nullable();
             $table->json('hero_image_content')->nullable();
             $table->string('conservation_heading')->nullable();
             $table->longText('conservation_text')->nullable();
-            $table->json('park_stats')->nullable();
-            $table->string('visuals_title')->nullable();
-            $table->string('visuals_subtitle')->nullable();
+            $table->string('visuals_title')->nullable(); // media title
+            $table->string('visuals_subtitle')->nullable(); //media subtitle
             $table->string('slug')->unique();
-            $table->json('closing_quote')->nullable();
+            $table->json('closing_quote')->nullable(); //last quote on page 
             $table->string('meta_one')->nullable();
-            $table->boolean('is_published')->default(false);
+    
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
 

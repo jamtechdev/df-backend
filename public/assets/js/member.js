@@ -38,7 +38,7 @@ $(document).ready(function () {
         members.forEach(member => {
             const roles = member.roles.map(r => r.name).join(', ');
             tbody += `<tr>
-                <td>${row++}</td>
+              
                 <td>${member.first_name}</td>
                 <td>${member.last_name}</td>
                 <td>${member.email}</td>

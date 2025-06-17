@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->json('dimensions')->nullable(); // width, height, thumbnails
             $table->integer('sort_order')->default(0);
             $table->json('metadata')->nullable(); // EXIF, copyright etc.
+            $table->boolean('is_gallery_visual')->default(false);
             $table->unsignedBigInteger('uploaded_by')->nullable();
             $table->timestamps();
         });

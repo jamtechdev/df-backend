@@ -14,7 +14,7 @@ $(document).ready(function () {
         let tbody = '';
         visitors.forEach(visitor => {
             tbody += `<tr>
-                <td>${visitor.id}</td>
+              
                 <td>${visitor.first_name}</td>
                 <td>${visitor.last_name}</td>
                 <td>${visitor.email}</td>
