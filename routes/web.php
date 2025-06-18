@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\Admin\NationalParkController;
 use App\Http\Controllers\Admin\NationalParkTranslationController;
+use App\Http\Controllers\Admin\MediaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/roles/{role}/permissions', [RolePermissionController::class, 'getPermissions']);
     Route::post('/roles/{role}/permissions/update', [RolePermissionController::class, 'updatePermissions']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+
+
+    // Media CRUD
+    Route::prefix('media')->group(function () {
+        Route::get('/{id}', [MediaController::class, 'index'])->name('media.index');
+        Route::get('{id}/create', [MediaController::class, 'create'])->name('media.create');
+        Route::post('{id}/store', [MediaController::class, 'store'])->name('media.store');
+        Route::get('{id}/{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
+        Route::put('{id}/{media}/update', [MediaController::class, 'update'])->name('media.update');
+        Route::delete('{id}/{media}/delete', [MediaController::class, 'destroy'])->name('media.destroy');
+    });
+
+
 
     // Project Permissions
     Route::prefix('projects')->group(function () {
@@ -79,18 +93,18 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/upload-image', [NationalParkTranslationController::class, 'uploadImage'])->name('national-parks.translation.uploadImage');
             Route::post('/delete-image', [NationalParkTranslationController::class, 'deleteImage'])->name('national-parks.translation.deleteImage');
             Route::post('/{id?}/store', [NationalParkTranslationController::class, 'store'])->name('national-parks.translation.store');
-            Route::get('/{national_park_id}/{id}/edit', [NationalParkTranslationController::class, 'edit'])->name('national-parks.translation.edit');
-            Route::post('/{national_park_id}/{id}/update', [NationalParkTranslationController::class, 'update'])->name('national-parks.translation.update');
-            Route::delete('/{national_park_id}/{id}', [NationalParkTranslationController::class, 'destroy'])->name('national-parks.translation.destroy');
+            Route::get('/{id}/edit', [NationalParkTranslationController::class, 'edit'])->name('national-parks.translation.edit');
+            Route::post('/{id}/update', [NationalParkTranslationController::class, 'update'])->name('national-parks.translation.update');
+            Route::delete('/{id}', [NationalParkTranslationController::class, 'destroy'])->name('national-parks.translation.destroy');
         });
 
         // Content Blocks CRUD
         Route::prefix('content-blocks')->group(function () {
-            Route::get('/{national_park_id}/{np_translation_id}/', [\App\Http\Controllers\Admin\ContentBlockController::class, 'index'])->name('national-parks.content-blocks.index');
-            Route::get('/{national_park_id}/fetch-translation-data', [\App\Http\Controllers\Admin\ContentBlockController::class, 'fetchtranslationData'])->name('national-parks.translation.fetchData');
-            Route::get('/{national_park_id}/{np_translation_id}/fetch-data', [\App\Http\Controllers\Admin\ContentBlockController::class, 'fetchData'])->name('national-parks.content-blocks.fetchData');
-            Route::post('/{national_park_id}/{np_translation_id}/store', [\App\Http\Controllers\Admin\ContentBlockController::class, 'store'])->name('national-parks.content-blocks.store');
-            Route::put('/{national_park_id}/{np_translation_id}/{content_block}/update', [\App\Http\Controllers\Admin\ContentBlockController::class, 'update'])->name('national-parks.content-blocks.update');
+            Route::get('{np_translation_id}/', [\App\Http\Controllers\Admin\ContentBlockController::class, 'index'])->name('national-parks.content-blocks.index');
+            Route::get('fetch-translation-data', [\App\Http\Controllers\Admin\ContentBlockController::class, 'fetchtranslationData'])->name('national-parks.translation.fetchData');
+            Route::get('{np_translation_id}/fetch-data', [\App\Http\Controllers\Admin\ContentBlockController::class, 'fetchData'])->name('national-parks.content-blocks.fetchData');
+            Route::post('{np_translation_id}/store', [\App\Http\Controllers\Admin\ContentBlockController::class, 'store'])->name('national-parks.content-blocks.store');
+            Route::put('{np_translation_id}/{content_block}/update', [\App\Http\Controllers\Admin\ContentBlockController::class, 'update'])->name('national-parks.content-blocks.update');
             Route::delete('/{np_translation_id}/{content_block}/delete', [\App\Http\Controllers\Admin\ContentBlockController::class, 'destroy'])->name('national-parks.content-blocks.destroy');
         });
     });

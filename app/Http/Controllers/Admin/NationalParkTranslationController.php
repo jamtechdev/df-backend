@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\NationalPark;
+use App\Models\NationalParkTranslation;
 use App\Models\Theme;
 use App\Services\NationalParkTranslationService;
 use Exception;
@@ -115,7 +116,7 @@ class NationalParkTranslationController extends Controller
      */
     public function store(Request $request)
     {
-       
+
         $data = $request->validate([
             'national_park_id' => 'required|integer',
             'language_code' => 'required|string|max:5',
@@ -177,15 +178,15 @@ class NationalParkTranslationController extends Controller
     /**
      * Show the form for editing the specified translation.
      */
-    public function edit($national_park_id, $id)
+    public function edit($id)
     {
         try {
-            $translation = $this->translationService->fetchData($id)->first();
-            if (!$translation) {
-                return back()->withErrors('Translation not found.');
-            }
-            $nationalPark = NationalPark::find($national_park_id);
+            $translation = NationalParkTranslation::find($id);
+            $nationalPark = NationalPark::find($translation->national_park_id);
+            $translation->closing_quote = json_decode($translation->closing_quote, true);
             $themes = Theme::all(); // Fetch all available themes for dropdown
+
+            // dd($translation);
             return view('admin.national-park-translation.form', compact('translation', 'nationalPark', 'themes'));
         } catch (Exception $e) {
             return back()->withErrors('Failed to load edit form: ' . $e->getMessage());
@@ -195,7 +196,7 @@ class NationalParkTranslationController extends Controller
     /**
      * Update the specified translation in storage.
      */
-    public function update(Request $request, $national_park_id, $id)
+    public function update(Request $request, $id)
     {
         $data = $request->validate([
             'language_code' => 'required|string|max:5',
@@ -219,9 +220,24 @@ class NationalParkTranslationController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
-        $data['national_park_id'] = $national_park_id;
-        $data['slug'] = \Illuminate\Support\Str::slug($data['title']);
+        $translation = NationalParkTranslation::findOrFail($id);
+        $data['national_park_id'] = $translation->national_park_id;
 
+        // Generate slug
+        $newSlug = \Illuminate\Support\Str::slug($data['title']);
+
+        // Check for duplicate slug excluding current ID
+        $slugExists = NationalParkTranslation::where('slug', $newSlug)
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($slugExists) {
+            // Append ID or timestamp to make slug unique
+            $newSlug .= '-' . $id;
+        }
+        $data['slug'] = $newSlug;
+
+        // Handle hero_image_content
         if (!empty($data['hero_background'])) {
             $heroBackground = json_decode($data['hero_background'], true);
             $heroTitle = $data['hero_section']['title'] ?? null;
@@ -236,7 +252,7 @@ class NationalParkTranslationController extends Controller
 
         unset($data['hero_background'], $data['hero_section']);
 
-        // ✅ Handle closing_quote as JSON
+        // Handle closing_quote as JSON
         $data['closing_quote'] = !empty($data['closing_quote']) ? json_encode($data['closing_quote']) : null;
 
         try {
@@ -245,12 +261,13 @@ class NationalParkTranslationController extends Controller
             return $request->ajax()
                 ? response()->json(['message' => 'Translation updated successfully.'], 200)
                 : redirect()->route('national-parks.translation.index')->with('success', 'Translation updated successfully.');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $request->ajax()
                 ? response()->json(['message' => 'Failed to update translation: ' . $e->getMessage()], 500)
                 : back()->withErrors('Failed to update translation: ' . $e->getMessage());
         }
     }
+
 
 
     /**

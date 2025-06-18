@@ -56,9 +56,10 @@ $(document).ready(function () {
                         '<td>' + (formatDate(park.updated_at) || 'N/A') + '</td>' +
                         '<td><div class="form-check form-switch"><input type="checkbox" class="form-check-input is-featured-toggle" data-id="' + park.id + '" ' + isFeaturedChecked + '></div></td>' +
                         '<td>' +
-                        '<button class="btn btn-sm btn-info btn-edit" data-id="' + park.id + '"><i class="fa-solid fa-pen-to-square me-2"></i></button>' +
-                        '<button class="btn btn-sm btn-secondary btn-translation" data-id="' + park.id + '"><i class="fa-solid fa-language me-2"></i>Translations</button>' +
-                        '<button class="btn btn-sm btn-danger btn-delete" data-id="' + park.id + '"><i class="fa-solid fa-trash me-2"></i></button>' +
+                        '<button class="btn btn-sm btn-info btn-edit ml-1" data-id="' + park.id + '"><i class="fa-solid fa-pen-to-square "></i></button>' +
+                        '<button class="btn btn-sm btn-secondary btn-translation" data-id="' + park.id + '"><i class="fa-solid fa-language"></i></button>' +
+                        '<a href="/media/' + park.id + '" class="btn btn-sm btn-warning"><i class="fa-solid fa-image"></i></a>' +
+                        '<button class="btn btn-sm btn-danger btn-delete" data-id="' + park.id + '"><i class="fa-solid fa-trash"></i></button>' +
                         '</td>' +
                         '</tr>';
                     tbody.append(row);

@@ -47,9 +47,9 @@ $(document).ready(function () {
                         '<td>' + (formatDate(t.updated_at) || 'N/A') + '</td>' +
                         '<td>' + (t.status) + '</td>' +
                         '<td>' +
-                        '<a href="/national-parks/translations/' + t.national_park_id + '/' + t.id + '/edit" class="btn btn-sm btn-info me-2">Edit</a>' +
-                        '<a href="/national-parks/content-blocks/' + t.national_park_id + '/' + t.id +  '" class="btn btn-sm btn-info me-2"> + Content</a>' +
-                        '<a href="/national-parks/translations/' + t.national_park_id + '/' + t.id + '/media" class="btn btn-sm btn-info me-2"> + Media</a>' +
+                        '<a href="/national-parks/translations/' + t.id + '/edit" class="btn btn-sm btn-info me-2">Edit</a>' +
+                        '<a href="/national-parks/content-blocks/' + t.id + '" class="btn btn-sm btn-info me-2">+ Content</a>' +
+                        '<a href="/national-parks/translations/media/' + t.id + '" class="btn btn-sm btn-info me-2">+ Media</a>' +
                         '<button class="btn btn-sm btn-danger btn-delete" data-id="' + t.id + '" data-national-park-id="' + t.national_park_id + '">Delete</button>' +
                         '</td>' +
                         '</tr>';
@@ -73,7 +73,7 @@ $(document).ready(function () {
         let id = $(this).data('id');
         showLoader();
         let nationalParkId = $(this).data('national-park-id');
-        axios.delete('/national-parks/translations/' + nationalParkId + '/' + id)
+        axios.delete('/national-parks/translations/' + id)
             .then(function (response) {
                 toastr.success(response.data.message);
                 fetchTranslations();

@@ -10,9 +10,9 @@ use Illuminate\Validation\Rule;
 
 class ContentBlockController extends Controller
 {
-    public function index($national_park_id, $np_translation_id)
+    public function index($np_translation_id)
     {
-        return view('admin.national-park.content-blocks.index', compact('np_translation_id', 'national_park_id'));
+        return view('admin.national-park.content-blocks.index', compact('np_translation_id'));
     }
 
     public function fetchData(Request $request, $np_translation_id)
@@ -28,7 +28,7 @@ class ContentBlockController extends Controller
     }
 
 
-    public function store(Request $request,$national_park_id, $np_translation_id)
+    public function store(Request $request,$np_translation_id)
     {
         $validated = $request->validate([
             'section_type' => ['required', Rule::in(['key_feature', 'explore', 'other', 'journey'])],
@@ -48,7 +48,7 @@ class ContentBlockController extends Controller
         return response()->json(['message' => 'Content block created successfully', 'contentBlock' => $contentBlock]);
     }
 
-    public function update(Request $request,$national_park_id ,$np_translation_id, $id)
+    public function update(Request $request ,$np_translation_id, $id)
     {
         $content_block = ContentBlock::findOrFail($id); // use findOrFail
 

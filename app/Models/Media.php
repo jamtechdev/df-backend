@@ -20,21 +20,18 @@ class Media extends Model
         'dimensions',
         'sort_order',
         'metadata',
+        'is_gallery_visual',
         'uploaded_by',
     ];
 
     protected $casts = [
         'dimensions' => 'array',
         'metadata' => 'array',
+        'is_gallery_visual' => 'boolean',
     ];
 
     public function mediable()
     {
         return $this->morphTo();
-    }
-
-    public function translations()
-    {
-        return $this->hasMany(MediaTranslation::class);
     }
 }

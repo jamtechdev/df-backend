@@ -19,16 +19,7 @@ class MenusTableSeeder extends Seeder
                 'icon' => 'fas fa-tree',
                 'uri' => '/national-parks',
                 'permission' => json_encode(['admin']), // Only Admin can see
-            ],
-            [
-                'project_id' => 2,
-                'parent_id' => 0,
-                'order' => 2,
-                'title' => 'Contents',
-                'icon' => 'fas fa-tree',
-                'uri' => route('national-parks.content-blocks.index'),
-                'permission' => json_encode(['admin']), // Only Admin can see
-            ],
+            ]
         ];
 
         Menu::insert($menus);

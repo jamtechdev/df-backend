@@ -14,7 +14,6 @@
                 <table class="table" id="contentBlocksTable">
                     <thead>
                         <tr>
-                         
                             <th>Section Type</th>
                             <th>Heading</th>
                             <th>Subheading</th>
@@ -135,8 +134,8 @@
 
 @push('scripts')
 <script>
-    window.contentBlocksFetchDataUrl = @json(route('national-parks.content-blocks.fetchData', ['national_park_id' => $national_park_id, 'np_translation_id' => $np_translation_id]));
-    window.contentBlocksBaseUrl = @json(url("national-parks/content-blocks/{$national_park_id}/{$np_translation_id}"));
+    window.contentBlocksFetchDataUrl = @json(route('national-parks.content-blocks.fetchData', ['np_translation_id' => $np_translation_id]));
+    window.contentBlocksBaseUrl = @json(url("national-parks/content-blocks/{$np_translation_id}"));
     window.npTranslationId = @json($np_translation_id); // Pass this also for JS to access
 </script>
 

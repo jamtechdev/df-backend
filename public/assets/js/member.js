@@ -1,7 +1,7 @@
 $(document).ready(function () {
     let isEditMode = false;
     let editMemberId = null;
-    let projectRolesMap = {}; // To store project id to roles mapping
+    let projectRolesMap = {}; // Project ID to Roles mapping
 
     function showLoader() { $('#loader').show(); }
     function hideLoader() { $('#loader').hide(); }
@@ -22,34 +22,6 @@ $(document).ready(function () {
                 $(`input[name="roles[]"][value="${role}"]`).prop('checked', true);
             });
         }
-    }
-
-    function fetchMembers() {
-        showLoader();
-        axios.get('/users/members/data')
-            .then(response => renderTable(response.data.members))
-            .catch(() => toastr.error('Failed to fetch members.'))
-            .finally(() => hideLoader());
-    }
-
-    function renderTable(members) {
-        let tbody = '';
-        let row = 1;
-        members.forEach(member => {
-            const roles = member.roles.map(r => r.name).join(', ');
-            tbody += `<tr>
-              
-                <td>${member.first_name}</td>
-                <td>${member.last_name}</td>
-                <td>${member.email}</td>
-                <td>${roles}</td>
-                <td>
-                    <button class="btn btn-sm btn-primary edit-btn" data-id="${member.id}"><i class="fa-solid fa-pen-to-square me-2"></i>Edit</button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="${member.id}"><i class="fa-solid fa-trash me-2"></i>Delete</button>
-                </td>
-            </tr>`;
-        });
-        $('#membersTableBody').html(tbody);
     }
 
     $('#openCreateMemberModal').click(function () {
@@ -84,12 +56,10 @@ $(document).ready(function () {
                 $('#passwordGroup').hide();
                 $('#password').removeAttr('required');
 
-                // Build projectRolesMap from projectsWithRoles
                 projectsWithRoles.forEach(p => {
                     projectRolesMap[p.id] = p.role ? p.role.split(',') : [];
                 });
 
-                // Select the first project if exists
                 const selectedProjectId = projectsWithRoles.length ? projectsWithRoles[0].id : null;
                 loadProjects(selectedProjectId);
                 updateRolesCheckboxes(selectedProjectId);
@@ -100,7 +70,6 @@ $(document).ready(function () {
             .finally(() => hideLoader());
     });
 
-    // Update roles checkboxes when project selection changes
     $('#projectId').change(function () {
         const selectedProjectId = $(this).val();
         updateRolesCheckboxes(selectedProjectId);
@@ -108,10 +77,6 @@ $(document).ready(function () {
 
     $(document).on('submit', '#memberForm', function (e) {
         e.preventDefault();
-
-        console.log('Form submit triggered');
-        console.log('isEditMode:', isEditMode);
-        console.log('editMemberId:', editMemberId);
 
         const formData = {
             first_name: $('#firstName').val(),
@@ -133,7 +98,7 @@ $(document).ready(function () {
         request.then(res => {
             toastr.success(res.data.message);
             $('#memberModal').modal('hide');
-            fetchMembers();
+            $('#member-table').DataTable().ajax.reload(); // Reload DataTable
         }).catch(err => {
             toastr.error(err.response?.data?.message || 'Operation failed.');
         }).finally(() => hideLoader());
@@ -146,12 +111,10 @@ $(document).ready(function () {
             axios.delete(`/users/members/${memberId}`)
                 .then(res => {
                     toastr.success(res.data.message);
-                    fetchMembers();
+                    $('#member-table').DataTable().ajax.reload(); // Reload DataTable
                 })
                 .catch(() => toastr.error('Delete failed.'))
                 .finally(() => hideLoader());
         }
     });
-
-    fetchMembers();
 });

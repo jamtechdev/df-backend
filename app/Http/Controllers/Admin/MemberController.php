@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DataTables\MemberDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
@@ -18,11 +19,14 @@ class MemberController extends Controller
     }
 
 
-    public function index()
+
+
+
+    public function index(MemberDataTable $dataTable)
     {
         try {
             $projects = Project::all();
-            return view('admin.member.index', compact('projects'));
+            return $dataTable->render('admin.member.index', compact('projects'));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to load members index: ' . $e->getMessage()], 500);
         }

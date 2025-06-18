@@ -27,15 +27,14 @@ class NationalParkTranslation extends Model
         'slug',
         'closing_quote',
         'meta_one',
-     
+
         'published_at'
     ];
 
     protected $casts = [
-        'hero_image_content' => 'array',
         'park_stats' => 'array',
+        'hero_image_content' => 'array',
         'closing_quote' => 'array',
-
         'published_at' => 'datetime',
     ];
 
@@ -48,5 +47,9 @@ class NationalParkTranslation extends Model
     public function theme()
     {
         return $this->belongsTo(Theme::class, 'theme_id');
+    }
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'mediable');
     }
 }
