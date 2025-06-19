@@ -5,17 +5,13 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\NationalPark;
 use App\Models\NationalParkTranslation;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class NationalParkSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Sample data for National Parks
+        // Example National Parks data
         $parks = [
             [
                 'category_id' => 1,
@@ -23,64 +19,110 @@ class NationalParkSeeder extends Seeder
                 'slug' => 'yellowstone-national-park',
                 'theme_id' => 1,
                 'seo_title' => 'Yellowstone National Park',
-                'seo_description' => 'Explore the wonders of Yellowstone National Park.',
-                'seo_keywords' => 'Yellowstone, National Park, Nature',
+                'seo_description' => 'Explore the beauty of Yellowstone.',
+                'seo_keywords' => 'Yellowstone, National Park, Wildlife',
                 'is_featured' => true,
                 'translations' => [
                     [
                         'language_code' => 'en',
                         'status' => 'published',
                         'theme_id' => 1,
-                        'lead_quote' => 'The first national park in the world.',
+                        'lead_quote' => 'The world\'s first national park.',
                         'title' => 'Yellowstone National Park',
-                        'subtitle' => 'A natural wonder',
-                        'intro_text_first' => 'Yellowstone is known for its wildlife and geothermal features.',
-                        'park_stats' => json_encode(['area' => '2,219,789 acres', 'visitors' => 4000000]),
-                        'hero_image_content' => json_encode(['image_url' => 'yellowstone.jpg', 'caption' => 'Old Faithful']),
-                        'conservation_heading' => 'Conservation Efforts',
-                        'conservation_text' => 'Efforts to preserve the park\'s natural beauty.',
-                        'visuals_title' => 'Visual Highlights',
-                        'visuals_subtitle' => 'Stunning landscapes',
+                        'subtitle' => 'A true natural wonder',
+                        'intro_text_first' => '<p>Yellowstone is famous for its geothermal features.</p>',
+                        'park_stats' => [
+                            [
+                                'icon' => 'tree',
+                                'value' => '2,219,789 acres',
+                                'label' => 'Area',
+                                'description' => 'Park area'
+                            ],
+                            [
+                                'icon' => 'users',
+                                'value' => '4 million',
+                                'label' => 'Visitors',
+                                'description' => 'Annual visitors'
+                            ]
+                        ],
+                        'hero_image_content' => [
+                            'background' => 'yellowstone.jpg',
+                            'title' => 'Old Faithful Geyser'
+                        ],
+                        'conservation_heading' => 'Conservation at Yellowstone',
+                        'conservation_text' => 'Preserving nature for future generations.',
+                        'visuals_title' => 'Natural Beauty',
+                        'visuals_subtitle' => 'Breathtaking views',
                         'slug' => 'yellowstone-national-park-en',
-                        'closing_quote' => json_encode(['quote' => 'Nature at its best']),
-                        'meta_one' => 'Meta information',
-                      
+                        'closing_quote' => [
+                            [
+                                'title' => 'Nature at its best',
+                                'description' => 'Experience untouched wilderness.'
+                            ]
+                        ],
+                        'meta_one' => 'Meta information EN',
                         'published_at' => Carbon::now(),
                     ],
                     [
                         'language_code' => 'fr',
                         'status' => 'draft',
                         'theme_id' => 1,
-                        'lead_quote' => 'Le premier parc national au monde.',
+                        'lead_quote' => 'Le premier parc national du monde.',
                         'title' => 'Parc National de Yellowstone',
                         'subtitle' => 'Une merveille naturelle',
-                        'intro_text_first' => 'Yellowstone est connu pour sa faune et ses caractéristiques géothermiques.',
-                        'park_stats' => json_encode(['surface' => '2 219 789 acres', 'visiteurs' => 4000000]),
-                        'hero_image_content' => json_encode(['image_url' => 'yellowstone_fr.jpg', 'caption' => 'Old Faithful']),
-                        'conservation_heading' => 'Efforts de conservation',
-                        'conservation_text' => 'Efforts pour préserver la beauté naturelle du parc.',
-                        'visuals_title' => 'Points forts visuels',
-                        'visuals_subtitle' => 'Paysages à couper le souffle',
+                        'intro_text_first' => '<p>Yellowstone est célèbre pour ses caractéristiques géothermiques.</p>',
+                        'park_stats' => [
+                            [
+                                'icon' => 'arbre',
+                                'value' => '2 219 789 acres',
+                                'label' => 'Superficie',
+                                'description' => 'Zone du parc'
+                            ],
+                            [
+                                'icon' => 'utilisateurs',
+                                'value' => '4 millions',
+                                'label' => 'Visiteurs',
+                                'description' => 'Visiteurs annuels'
+                            ]
+                        ],
+                        'hero_image_content' => [
+                            'background' => 'yellowstone_fr.jpg',
+                            'title' => 'Old Faithful Geyser FR'
+                        ],
+                        'conservation_heading' => 'Conservation à Yellowstone',
+                        'conservation_text' => 'Préserver la nature pour les générations futures.',
+                        'visuals_title' => 'Beauté naturelle',
+                        'visuals_subtitle' => 'Vues à couper le souffle',
                         'slug' => 'parc-national-de-yellowstone-fr',
-                        'closing_quote' => json_encode(['quote' => 'La nature à son meilleur']),
-                        'meta_one' => 'Informations méta',
-                      
+                        'closing_quote' => [
+                            [
+                                'title' => 'La nature à son meilleur',
+                                'description' => 'Découvrez la nature sauvage.'
+                            ]
+                        ],
+                        'meta_one' => 'Information méta FR',
                         'published_at' => null,
                     ],
-                ],
-            ],
-            // Add more parks if needed
+                ]
+            ]
         ];
 
+        // Insert data into national_parks and national_park_translations
         foreach ($parks as $parkData) {
             $translations = $parkData['translations'];
             unset($parkData['translations']);
 
             $park = NationalPark::create($parkData);
 
-            foreach ($translations as $translationData) {
-                $translationData['national_park_id'] = $park->id;
-                NationalParkTranslation::create($translationData);
+            foreach ($translations as $translation) {
+                $translation['national_park_id'] = $park->id;
+
+                // Convert JSON casted fields
+                $translation['park_stats'] = $translation['park_stats'];
+                $translation['hero_image_content'] = $translation['hero_image_content'];
+                $translation['closing_quote'] = $translation['closing_quote'];
+
+                NationalParkTranslation::create($translation);
             }
         }
     }

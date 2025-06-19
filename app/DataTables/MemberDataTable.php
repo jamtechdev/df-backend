@@ -63,11 +63,10 @@ class MemberDataTable extends DataTable
                     ->className('btn btn-primary')
                     ->text('<i class="fa fa-plus"></i> New')
                     ->visible(true)
-                    ->action('function(e, dt, node, config) {
-                                let url = "#";
-                                console.log("Button clicked. Redirecting to: " + url);
-                                window.location.href = url;
-                            }')
+                    ->attr([
+                        'id' => 'openCreateMemberModal',
+                        'class' => 'btn btn-primary'
+                    ])
             )
             ->parameters([
                 'paging' => true,

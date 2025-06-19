@@ -102,11 +102,8 @@
 @push('scripts')
 {!! $dataTable->scripts() !!}
 <script>
-    window.mediaId = {
-        {
-            $mediaId
-        }
-    };
+    window.mediaId = {{ $mediaId}};
+      
 </script>
 <script src="{{ asset('assets/js/media-translation.js') }}"></script>
 @endpush

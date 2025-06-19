@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\Admin\NationalParkController;
 use App\Http\Controllers\Admin\NationalParkTranslationController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\HiddenWonderController;
 use App\Http\Controllers\Admin\ThemeController;
 use App\Http\Controllers\Admin\MediaTranslationController;
 use Illuminate\Support\Facades\Auth;
@@ -114,6 +115,14 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/{id}/update', [NationalParkTranslationController::class, 'update'])->name('national-parks.translations.update');
             Route::delete('/{id}', [NationalParkTranslationController::class, 'destroy'])->name('national-parks.translations.destroy');
             Route::get('/datatable', [NationalParkTranslationController::class, 'dataTable'])->name('national-parks.translations.datatable');
+
+            Route::prefix('hidden-wonders')->group(function () {
+                Route::get('/{translation}', [HiddenWonderController::class, 'index'])->name('national-parks.translations.hidden-wonders.index');
+                Route::get('/{hiddenWonder}/edit', [HiddenWonderController::class, 'edit'])->name('national-parks.translations.hidden-wonders.edit');
+                Route::post('/store-hidden-wonder', [HiddenWonderController::class, 'store'])->name('national-parks.translations.hidden-wonders.store');
+                Route::put('/{hiddenWonder}', [HiddenWonderController::class, 'update'])->name('national-parks.translations.hidden-wonders.update');
+                Route::delete('/{hiddenWonder}', [HiddenWonderController::class, 'destroy'])->name('national-parks.translations.hidden-wonders.destroy');
+            });
         });
 
         // Content Blocks CRUD
@@ -128,7 +137,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // theme CRUD
-        Route::prefix('themes')->group(function () {
+    Route::prefix('themes')->group(function () {
         Route::get('/', [ThemeController::class, 'index'])->name('themes.index');
         Route::post('/', [ThemeController::class, 'store'])->name('themes.store'); // ✅ FIXED
         Route::post('/{id}', [ThemeController::class, 'update'])->name('themes.update'); // Using POST + _method=PUT

@@ -1,0 +1,121 @@
+$(document).ready(function () {
+    let isEditMode = false;
+    let editHiddenWonderId = null;
+
+    function showLoader() { $('#loader').show(); }
+    function hideLoader() { $('#loader').hide(); }
+
+    function resetForm() {
+        $('#hiddenWonderForm')[0].reset();
+        editHiddenWonderId = null;
+        isEditMode = false;
+        $('#hiddenWonderModalLabel').text('Add Hidden Wonder');
+        $('#is_active').prop('checked', false);
+    }
+
+    $('#createHiddenWonderBtn').click(function () {
+        resetForm();
+        $('#hiddenWonderModal').modal('show');
+    });
+
+    $(document).on('click', '.edit-hidden-wonder', function (e) {
+        e.preventDefault();
+        const id = $(this).data('id');
+        console.log("Edit ID:", id);
+        // Replace 'ID_PLACEHOLDER' in the edit URL
+        let editUrl = window.hiddenWonderRoutes.edit.replace('ID_PLACEHOLDER', id);
+        showLoader();
+        axios.get(editUrl)
+            .then(function (response) {
+                let hiddenWonder = response.data.hiddenWonder;
+                isEditMode = true;
+                editHiddenWonderId = hiddenWonder.id;
+                $('#hiddenWonderModalLabel').text('Edit Hidden Wonder');
+                $('#section_heading').val(hiddenWonder.section_heading || '');
+                $('#section_title').val(hiddenWonder.section_title || '');
+                $('#section_subtitle').val(hiddenWonder.section_subtitle || '');
+                $('#icon').val(hiddenWonder.icon || '');
+                $('#title').val(hiddenWonder.title || '');
+                $('#subtitle').val(hiddenWonder.subtitle || '');
+                $('#description').val(hiddenWonder.description || '');
+                $('#tip_heading').val(hiddenWonder.tip_heading || '');
+                $('#tip_text').val(hiddenWonder.tip_text || '');
+                $('#quote').val(hiddenWonder.quote || '');
+                $('#sort_order').val(hiddenWonder.sort_order || 0);
+                $('#is_active').prop('checked', hiddenWonder.is_active ? true : false);
+                $('#hiddenWonderModal').modal('show');
+            })
+            .catch(function (error) {
+                toastr.error('Failed to fetch hidden wonder data.');
+                console.error('Error:', error);
+            })
+            .finally(function () {
+                hideLoader();
+            });
+    });
+
+    $('#hiddenWonderForm').submit(function (e) {
+        e.preventDefault();
+        let url = isEditMode
+            ? window.hiddenWonderRoutes.update.replace('ID_PLACEHOLDER', editHiddenWonderId)
+            : window.hiddenWonderRoutes.store;
+        let method = isEditMode ? 'put' : 'post';
+
+        let formData = {
+            national_park_translation_id: $('#nationalParkTranslationId').val(),
+            section_heading: $('#section_heading').val(),
+            section_title: $('#section_title').val(),
+            section_subtitle: $('#section_subtitle').val(),
+            icon: $('#icon').val(),
+            title: $('#title').val(),
+            subtitle: $('#subtitle').val(),
+            description: $('#description').val(),
+            tip_heading: $('#tip_heading').val(),
+            tip_text: $('#tip_text').val(),
+            quote: $('#quote').val(),
+            sort_order: $('#sort_order').val(),
+            is_active: $('#is_active').is(':checked') ? 1 : 0
+        };
+
+        showLoader();
+        axios({
+            method: method,
+            url: url,
+            data: formData
+        })
+            .then(function (response) {
+                toastr.success(response.data.message);
+                $('#hiddenWonderModal').modal('hide');
+                if ($.fn.DataTable.isDataTable('#hiddenWondersTable')) {
+                    $('#hiddenWondersTable').DataTable().ajax.reload(null, false);
+                }
+            })
+            .catch(function (error) {
+                toastr.error('Error occurred while saving.');
+                console.error('Error:', error);
+            })
+            .finally(function () {
+                hideLoader();
+            });
+    });
+
+    $(document).on('click', '.delete-hidden-wonder', function () {
+        if (!confirm('Are you sure you want to delete this hidden wonder?')) return;
+        let id = $(this).data('id');
+        showLoader();
+        axios.delete(window.hiddenWonderRoutes.delete + id)
+            .then(function (response) {
+                toastr.success(response.data.message);
+                if ($.fn.DataTable.isDataTable('#hiddenWondersTable')) {
+                    $('#hiddenWondersTable').DataTable().ajax.reload(null, false);
+                }
+            })
+            .catch(function (error) {
+                toastr.error('Failed to delete hidden wonder.');
+                console.error('Error:', error);
+            })
+            .finally(function () {
+                hideLoader();
+            });
+    });
+});

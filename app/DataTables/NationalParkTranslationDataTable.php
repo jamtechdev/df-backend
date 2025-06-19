@@ -32,29 +32,37 @@ class NationalParkTranslationDataTable extends DataTable
                 $buttons = [
                     [
                         'href' => route('national-parks.translations.edit', ['id' => $translation->id]),
-                        'class' => 'btn-info btn-edit me-1',
+                        'class' => 'btn-info btn-sm btn-edit', // small button, margin-end for spacing
                         'icon' => 'fa-solid fa-pen-to-square',
                         'text' => 'Edit',
                         'data' => ['id' => $translation->id],
                     ],
                     [
                         'href' => url('/national-parks/content-blocks/' . $translation->id),
-                        'class' => 'btn-info me-1',
+                        'class' => 'btn-info btn-sm mb-2',
                         'icon' => 'fa-solid fa-plus',
-                        'text' => '+ Content',
+                        'text' => 'Content',
+                        'data' => ['id' => $translation->id],
+                    ],
+                    [
+                        'href' => route('national-parks.translations.hidden-wonders.index', ['translation' => $translation->id]),
+                        'class' => 'btn-warning btn-sm',
+                        'icon' => 'fa-solid fa-search',
+                        'text' => 'Hidden Wonders',
                         'data' => ['id' => $translation->id],
                     ],
                     [
                         'href' => 'javascript:void(0);',
-                        'class' => 'btn-danger btn-delete',
+                        'class' => 'btn-danger btn-sm btn-delete',
                         'icon' => 'fa-solid fa-trash',
-                        'text' => 'Delete',
+                        'text' => 'delete',
                         'data' => ['id' => $translation->id, 'national-park-id' => $translation->national_park_id],
                     ],
                 ];
 
                 return view('components.datatable.colunms.buttons', ['data' => $buttons])->render();
             })
+
             ->rawColumns(['actions'])
             ->editColumn('published_at', function (NationalParkTranslation $translation) {
                 return $translation->published_at ? $translation->published_at->format('Y-m-d H:i:s') : 'N/A';
@@ -119,7 +127,7 @@ class NationalParkTranslationDataTable extends DataTable
             Column::computed('actions')
                 ->exportable(false)
                 ->printable(false)
-                ->width(150)
+                ->width(250)
                 ->addClass('text-center'),
         ];
     }

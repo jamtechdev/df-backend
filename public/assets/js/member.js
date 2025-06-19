@@ -25,6 +25,8 @@ $(document).ready(function () {
     }
 
     $('#openCreateMemberModal').click(function () {
+        console.log('hello');
+        
         isEditMode = false;
         editMemberId = null;
         projectRolesMap = {};

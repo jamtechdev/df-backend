@@ -179,8 +179,9 @@ class NationalParkTranslationController extends Controller
     {
         try {
             $translation = NationalParkTranslation::find($id);
+            
             $nationalPark = NationalPark::find($translation->national_park_id);
-            $translation->closing_quote = json_decode($translation->closing_quote, true);
+            $translation->closing_quote = $translation->closing_quote;
             $themes = Theme::all(); // Fetch all available themes for dropdown
 
             // dd($translation);
@@ -193,77 +194,72 @@ class NationalParkTranslationController extends Controller
     /**
      * Update the specified translation in storage.
      */
-    public function update(Request $request, $id)
-    {
-        $data = $request->validate([
-            'language_code' => 'required|string|max:5',
-            'status' => 'required|in:draft,published',
-            'theme_id' => 'nullable|integer',
-            'lead_quote' => 'nullable|string',
-            'title' => 'required|string',
-            'subtitle' => 'nullable|string',
-            'intro_text_first' => 'nullable|string',
-            'park_stats' => 'nullable|array',
-            'hero_background' => 'nullable|string',
-            'hero_section' => 'nullable|array',
-            'conservation_heading' => 'nullable|string',
-            'conservation_text' => 'nullable|string',
-            'visuals_title' => 'nullable|string',
-            'visuals_subtitle' => 'nullable|string',
-            'closing_quote' => 'nullable|array',
-            'closing_quote.*.title' => 'nullable|string',
-            'closing_quote.*.description' => 'nullable|string',
-            'meta_one' => 'nullable|string',
-            'published_at' => 'nullable|date',
-        ]);
+   public function update(Request $request, $id)
+{
+    $data = $request->validate([
+        'language_code' => 'required|string|max:5',
+        'status' => 'required|in:draft,published',
+        'theme_id' => 'nullable|integer',
+        'lead_quote' => 'nullable|string',
+        'title' => 'required|string',
+        'subtitle' => 'nullable|string',
+        'intro_text_first' => 'nullable|string',
+        'park_stats' => 'nullable|array',
+        'hero_background' => 'nullable|string',
+        'hero_section' => 'nullable|array',
+        'conservation_heading' => 'nullable|string',
+        'conservation_text' => 'nullable|string',
+        'visuals_title' => 'nullable|string',
+        'visuals_subtitle' => 'nullable|string',
+        'closing_quote' => 'nullable|array',
+        'closing_quote.*.title' => 'nullable|string',
+        'closing_quote.*.description' => 'nullable|string',
+        'meta_one' => 'nullable|string',
+        'published_at' => 'nullable|date',
+    ]);
 
-        $translation = NationalParkTranslation::findOrFail($id);
-        $data['national_park_id'] = $translation->national_park_id;
+    $translation = NationalParkTranslation::findOrFail($id);
+    $data['national_park_id'] = $translation->national_park_id;
 
-        // Generate slug
-        $newSlug = \Illuminate\Support\Str::slug($data['title']);
+    // Generate unique slug
+    $newSlug = \Illuminate\Support\Str::slug($data['title']);
+    $slugExists = NationalParkTranslation::where('slug', $newSlug)
+        ->where('id', '!=', $id)
+        ->exists();
 
-        // Check for duplicate slug excluding current ID
-        $slugExists = NationalParkTranslation::where('slug', $newSlug)
-            ->where('id', '!=', $id)
-            ->exists();
-
-        if ($slugExists) {
-            // Append ID or timestamp to make slug unique
-            $newSlug .= '-' . $id;
-        }
-        $data['slug'] = $newSlug;
-
-        // Handle hero_image_content
-        if (!empty($data['hero_background'])) {
-            $heroBackground = json_decode($data['hero_background'], true);
-            $heroTitle = $data['hero_section']['title'] ?? null;
-
-            $data['hero_image_content'] = [
-                'background' => $heroBackground['url'] ?? null,
-                'title' => $heroTitle
-            ];
-        } else {
-            unset($data['hero_image_content']);
-        }
-
-        unset($data['hero_background'], $data['hero_section']);
-
-        // Handle closing_quote as JSON
-        $data['closing_quote'] = !empty($data['closing_quote']) ? json_encode($data['closing_quote']) : null;
-
-        try {
-            $this->translationService->updateTranslation($id, $data);
-
-            return $request->ajax()
-                ? response()->json(['message' => 'Translation updated successfully.'], 200)
-                : redirect()->route('national-parks.translation.index')->with('success', 'Translation updated successfully.');
-        } catch (\Exception $e) {
-            return $request->ajax()
-                ? response()->json(['message' => 'Failed to update translation: ' . $e->getMessage()], 500)
-                : back()->withErrors('Failed to update translation: ' . $e->getMessage());
-        }
+    if ($slugExists) {
+        $newSlug .= '-' . $id;
     }
+    $data['slug'] = $newSlug;
+
+    // Handle hero_image_content automatically as array
+    if (!empty($data['hero_background'])) {
+        $heroBackground = json_decode($data['hero_background'], true);
+        $heroTitle = $data['hero_section']['title'] ?? null;
+
+        $data['hero_image_content'] = [
+            'background' => $heroBackground['url'] ?? null,
+            'title' => $heroTitle
+        ];
+    } else {
+        $data['hero_image_content'] = null;
+    }
+
+    unset($data['hero_background'], $data['hero_section']); // Clean up these temp fields
+
+    try {
+        $this->translationService->updateTranslation($id, $data);
+
+        return $request->ajax()
+            ? response()->json(['message' => 'Translation updated successfully.'], 200)
+            : redirect()->route('national-parks.translation.index')->with('success', 'Translation updated successfully.');
+    } catch (\Exception $e) {
+        return $request->ajax()
+            ? response()->json(['message' => 'Failed to update translation: ' . $e->getMessage()], 500)
+            : back()->withErrors('Failed to update translation: ' . $e->getMessage());
+    }
+}
+
 
 
 
