@@ -1,17 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 text-primary fw-bold">Media Translations</h1>
-        <a href="{{ route('media.index', ['id' => $mediaId]) }}" class="btn btn-outline-secondary">
-            <i class="fa fa-arrow-left"></i> Back to Media
-        </a>
-    </div>
-
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body">
-            {!! $dataTable->table(['class' => 'table table-bordered table-striped', 'id' => 'mediaTranslationTable'], true) !!}
+<div class="container-fluid flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="card">
+                <h5 class="card-header">National Parks Media</h5>
+                <div class="card-body">
+                    {!! $dataTable->table(['class' => 'table table-bordered table-striped', 'id' => 'mediaTranslationTable'], true) !!}
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -21,12 +19,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <form id="translationForm" novalidate>
             <div class="modal-content rounded-4 shadow-lg">
-                <div class="modal-header bg-gradient bg-primary text-white">
-                    <h5 class="modal-title" id="translationModalLabel"><i class="fa fa-language me-2"></i>Add Translation</h5>
+                <div class="modal-header bg-gradient bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title" id="translationModalLabel">
+                        <i class="fa fa-language me-2"></i>Add Translation
+                    </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-light p-4">
-                    <input type="hidden" id="translationId" name="translationId" value="">
+                    <input type="hidden" id="translationId" name="translationId">
 
                     <div class="row g-3">
                         <!-- Language Dropdown -->
@@ -85,12 +85,12 @@
 
                     <div id="formErrors" class="alert alert-danger d-none mt-3"></div>
                 </div>
-                <div class="modal-footer bg-light border-0">
+                <div class="modal-footer bg-light border-0 rounded-bottom-4">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> Cancel
+                        <i class="fa fa-times me-1"></i>Cancel
                     </button>
                     <button type="submit" class="btn btn-primary" id="saveTranslationBtn">
-                        <i class="fa fa-save"></i> Save
+                        <i class="fa fa-save me-1"></i>Save
                     </button>
                 </div>
             </div>
@@ -100,9 +100,13 @@
 @endsection
 
 @push('scripts')
-    {!! $dataTable->scripts() !!}
-    <script>
-        window.mediaId = {{ $mediaId }};
-    </script>
-    <script src="{{ asset('assets/js/media-translation.js') }}"></script>
+{!! $dataTable->scripts() !!}
+<script>
+    window.mediaId = {
+        {
+            $mediaId
+        }
+    };
+</script>
+<script src="{{ asset('assets/js/media-translation.js') }}"></script>
 @endpush

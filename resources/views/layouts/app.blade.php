@@ -10,6 +10,8 @@
 
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.bunny.net">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.min.css">
+
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
@@ -27,11 +29,11 @@
         }
     </style>
 
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 
     <!-- Loader CSS -->
+    <!-- 
     <style>
         #globalLoader {
             position: fixed;
@@ -65,13 +67,16 @@
             }
         }
     </style>
+    -->
 </head>
 
 <body class="font-sans antialiased">
     <!-- Global Page Loader -->
+    <!--
     <div id="globalLoader">
         <div class="loader-circle"></div>
     </div>
+    -->
 
     <!-- <div class="container-fluid">
         <div class="row min-vh-100"> -->
@@ -104,7 +109,8 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-  
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+
     <script src="{{asset('assets/js/global.js')}}"></script>
     @stack('scripts')
     @include('layouts._toasts')

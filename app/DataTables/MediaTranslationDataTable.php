@@ -82,33 +82,31 @@ class MediaTranslationDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('media-translation-table')
+            ->setTableId('mediaTranslationTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('
-            <"row"<"col-md-6 d-flex justify-content-start"f><"col-sm-12 col-md-6 d-flex align-items-center justify-content-end"lB>>
-            <"row"<"col-md-12"tr>>
-            <"row"<"col-md-6"i><"col-md-6"p>>
-        ')
+                <"row"<"col-md-6 d-flex justify-content-start"f><"col-sm-12 col-md-6 d-flex align-items-center justify-content-end"lB>>
+                <"row"<"col-md-12"tr>>
+                <"row"<"col-md-6"i><"col-md-6"p>>
+            ')
             ->orderBy(1)
-            ->language(["search" => "", "lengthMenu" => "_MENU_", "searchPlaceholder" => 'Search Media'])
+            ->language(["search" => "", "lengthMenu" => "_MENU_", "searchPlaceholder" => 'Search'])
             ->buttons(
                 Button::make()
+                    ->className('btn btn-primary')
                     ->text('<i class="fa fa-plus"></i> New')
                     ->attr([
                         'id' => 'btnNewTranslation',
-                        'class' => 'btn btn-primary',
                         'media-id' => $this->mediaId
                     ])
             )
-
             ->parameters([
                 'paging' => true,
                 'lengthMenu' => [
                     [10, 15, 25, 50, -1],
                     ['10', '15', '25', '50', 'Show all']
                 ],
-
             ]);
     }
 

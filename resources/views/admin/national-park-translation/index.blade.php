@@ -2,32 +2,14 @@
 
 @section('content')
 
-<div class="container-fluid mt-5">
+<div class="container-fluid flex-grow-1 container-p-y">
     <div class="row">
-        <div class="col-md-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>National Park Translations</h4>
-                <button id="btnAddTranslation" class="btn btn-primary" data-id="{{ $national_park_id }}"><i class="fa-solid fa-plus me-2"></i>Add New Translation</button>
-            </div>
-            <div class="theme-table">
-                <table class="table" id="nationalParkTranslationsTable">
-                    <thead>
-                        <tr>
-                      
-                            <th>National Park </th>
-                            <th>Lang</th>
-                            <th>Theme </th>
-                            <th>Published At</th>
-                            <th>Created At</th>
-                            <th>Updated At</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be populated by JS -->
-                    </tbody>
-                </table>
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="card">
+                <h5 class="card-header">National Parks translations</h5>
+                <div class="card-body">
+                    {!! $dataTable->table(['class' => 'table table-bordered table-striped', 'id' => 'nPTranslationTable'], true) !!}
+                </div>
             </div>
         </div>
     </div>
@@ -48,6 +30,7 @@
 <script>
     window.globalNationalParkId = {{$national_park_id ?? 'null'}};
 </script>
-<script src="{{ asset('assets/js/national-park-translations.js') }}"></script>
+{!! $dataTable->scripts() !!}
+{{-- <script src="{{ asset('assets/js/national-park-translations.js') }}"></script> --}}
 
 @endpush

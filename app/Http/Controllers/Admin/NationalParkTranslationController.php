@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DataTables\NationalParkTranslationDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\NationalPark;
@@ -27,14 +28,16 @@ class NationalParkTranslationController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index($national_park_id = null)
+    public function index(NationalParkTranslationDataTable $dataTable, $national_park_id = null)
     {
         try {
-            return view('admin.national-park-translation.index', compact('national_park_id'));
+            $dataTable->setNationalParkId($national_park_id); // 👈 Set it here
+            return $dataTable->render('admin.national-park-translation.index', compact('national_park_id'));
         } catch (Exception $e) {
             return back()->withErrors('Failed to load translations page: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Handle image upload and save to S3.
@@ -80,21 +83,15 @@ class NationalParkTranslationController extends Controller
      */
     public function fetchData($national_park_id = null)
     {
-        try {
-            $translations = $this->translationService->fetchData($national_park_id);
-            return response()->json([
-                'status' => true,
-                'message' => 'Translations fetched successfully.',
-                'translations' => $translations
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to fetch translations.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        // This method is no longer needed for DataTable AJAX, so we can remove or comment it out.
+        // Alternatively, we can redirect or return an error if called.
+        return response()->json(['message' => 'Use DataTable AJAX endpoint instead.'], 400);
     }
+
+    /**
+     * Return DataTable AJAX response.
+     */
+    // Removed the separate dataTable method as index now handles DataTable rendering
 
     /**
      * Show the form for creating a new translation.

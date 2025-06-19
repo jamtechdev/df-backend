@@ -1,35 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid mt-5">
+<div class="container-fluid flex-grow-1 container-p-y">
     <div class="row">
-        <div class="col-md-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>National Parks</h4>
-                <button id="btnAdd" class="btn btn-primary"><i class="fa-solid fa-plus me-2"></i>Add New National Park</button>
-            </div>
-            <div class="theme-table">
-                <table class="table" id="nationalParksTable">
-                    <thead>
-                        <tr>
-                            <th>Default Theme</th>
-                            <th>Name</th>
-                            <th>Slug</th>
-                            <th>Created At</th>
-                            <th>Updated At</th>
-                            <th>Featured</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be populated by JS -->
-                    </tbody>
-                </table>
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="card">
+                <h5 class="card-header">National Parks</h5>
+                <div class="card-body">
+                    {!! $dataTable->table(['class' => 'table table-bordered table-striped', 'id' => 'nationalParksTable'], true) !!}
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Create/Edit Modal -->
 <div class="modal fade" id="nationalParkModal" tabindex="-1" aria-labelledby="nationalParkModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
@@ -92,5 +75,5 @@
 
 @push('scripts')
 <script src="{{ asset('assets/js/national-parks.js') }}"></script>
-
+{!! $dataTable->scripts() !!}
 @endpush

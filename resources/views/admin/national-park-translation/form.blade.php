@@ -11,7 +11,7 @@
                 Loading...
             </div>
 
-            <form id="translationForm" method="POST" action="{{ isset($translation) ? route('national-parks.translation.update', [$translation->id]) : route('national-parks.translation.store', $nationalPark->id ?? 0) }}" novalidate>
+            <form id="translationForm" method="POST" action="{{ isset($translation) ? route('national-parks.translations.update', [$translation->id]) : route('national-parks.translations.store', $nationalPark->id ?? 0) }}" novalidate>
                 @csrf
 
                 {{-- Lead Quote & Language --}}
@@ -109,7 +109,7 @@
                 @endphp
                 <div class="mb-4">
                     <label class="form-label fw-semibold">Hero Section</label>
-                    <div id="hero-dropzone" class="dropzone bg-light p-4 border rounded text-center" data-upload-url="{{ route('national-parks.translation.uploadImage') }}">
+                    <div id="hero-dropzone" class="dropzone bg-light p-4 border rounded text-center" data-upload-url="{{ route('national-parks.translations.uploadImage') }}">
                         <div class="dz-message">Drag & Drop or Click</div>
                     </div>
                     <input type="hidden" name="hero_background" id="hero_background" value="{{ json_encode(['url' => $hero['background'] ?? '']) }}">
@@ -120,7 +120,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <a href="{{ route('national-parks.translation.index', $nationalPark->id ?? 0) }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('national-parks.translations.index', $nationalPark->id ?? 0) }}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-success">{{ isset($translation) ? 'Update' : 'Create' }} Translation</button>
                 </div>
             </form>

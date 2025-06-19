@@ -88,7 +88,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    
+
     // National Parks CRUD
     Route::prefix('national-parks')->group(function () {
         Route::get('/', [NationalParkController::class, 'index'])->name('national-parks.index');
@@ -104,15 +104,15 @@ Route::middleware(['auth'])->group(function () {
         });
         // National Park Translations CRUD
         Route::prefix('translations')->group(function () {
-            Route::get('/{id}', [NationalParkTranslationController::class, 'index'])->name('national-parks.translation.index');
-            Route::get('/fetch-data/{id?}', [NationalParkTranslationController::class, 'fetchData'])->name('national-parks.translation.fetchData');
-            Route::get('/{id?}/create', [NationalParkTranslationController::class, 'create'])->name('national-parks.translation.create');
-            Route::post('/upload-image', [NationalParkTranslationController::class, 'uploadImage'])->name('national-parks.translation.uploadImage');
-            Route::post('/delete-image', [NationalParkTranslationController::class, 'deleteImage'])->name('national-parks.translation.deleteImage');
-            Route::post('/{id?}/store', [NationalParkTranslationController::class, 'store'])->name('national-parks.translation.store');
-            Route::get('/{id}/edit', [NationalParkTranslationController::class, 'edit'])->name('national-parks.translation.edit');
-            Route::post('/{id}/update', [NationalParkTranslationController::class, 'update'])->name('national-parks.translation.update');
-            Route::delete('/{id}', [NationalParkTranslationController::class, 'destroy'])->name('national-parks.translation.destroy');
+            Route::get('/{id}', [NationalParkTranslationController::class, 'index'])->name('national-parks.translations.index');
+            Route::get('/{id?}/create', [NationalParkTranslationController::class, 'create'])->name('national-parks.translations.create');
+            Route::post('/upload-image', [NationalParkTranslationController::class, 'uploadImage'])->name('national-parks.translations.uploadImage');
+            Route::post('/delete-image', [NationalParkTranslationController::class, 'deleteImage'])->name('national-parks.translations.deleteImage');
+            Route::post('/{id?}/store', [NationalParkTranslationController::class, 'store'])->name('national-parks.translations.store');
+            Route::get('/{id}/edit', [NationalParkTranslationController::class, 'edit'])->name('national-parks.translations.edit');
+            Route::post('/{id}/update', [NationalParkTranslationController::class, 'update'])->name('national-parks.translations.update');
+            Route::delete('/{id}', [NationalParkTranslationController::class, 'destroy'])->name('national-parks.translations.destroy');
+            Route::get('/datatable', [NationalParkTranslationController::class, 'dataTable'])->name('national-parks.translations.datatable');
         });
 
         // Content Blocks CRUD
