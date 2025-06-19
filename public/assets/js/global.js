@@ -1,25 +1,25 @@
-// Ensure loader stays at least 500ms (or adjust here)
-window.addEventListener('load', function () {
-    setTimeout(function () {
-        const loader = document.getElementById('globalLoader');
-        if (loader) {
-            loader.style.display = 'none';
-        }
-    }, 500); // 500ms delay
-});
+// // Ensure loader stays at least 500ms (or adjust here)
+// window.addEventListener('load', function () {
+//     setTimeout(function () {
+//         const loader = document.getElementById('globalLoader');
+//         if (loader) {
+//             loader.style.display = 'none';
+//         }
+//     }, 500); // 500ms delay
+// });
 
-// Ajax Loader Handling
-$(document).on({
-    ajaxStart: function () {
-        $('#globalLoader').show();
-    },
-    ajaxStop: function () {
-        // same delay for AJAX loader hide
-        setTimeout(function () {
-            $('#globalLoader').hide();
-        }, 500); // adjust delay if needed
-    }
-});
+// // Ajax Loader Handling
+// $(document).on({
+//     ajaxStart: function () {
+//         $('#globalLoader').show();
+//     },
+//     ajaxStop: function () {
+//         // same delay for AJAX loader hide
+//         setTimeout(function () {
+//             $('#globalLoader').hide();
+//         }, 500); // adjust delay if needed
+//     }
+// });
 
 $(document).ready(function () {
     // Show sidebar on button click (hamburger)

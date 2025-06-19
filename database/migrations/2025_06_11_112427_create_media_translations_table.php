@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('overlay_subtitle')->nullable();
             $table->longText('overlay_description')->nullable();
             $table->string('title')->nullable();
-            $table->string('subtitle')->nullable();
+            $table->string('subtitle')->nullable(); 
             $table->longText('description')->nullable();
             $table->timestamps();
 

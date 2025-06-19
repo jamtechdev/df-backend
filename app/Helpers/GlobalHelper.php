@@ -4,6 +4,7 @@ use App\Models\Menu;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 
+// menu
 if (!function_exists('menu')) {
     function menu()
     {
@@ -53,7 +54,7 @@ if (!function_exists('menu')) {
     }
 }
 
-
+// add prefix on table 
 if (!function_exists('np_table')) {
     function np_table(string $tableName): string
     {
@@ -61,6 +62,7 @@ if (!function_exists('np_table')) {
     }
 }
 
+//check project access 
 if (!function_exists('hasProjectAccess')) {
     function hasProjectAccess($projectId)
     {
@@ -77,3 +79,7 @@ if (!function_exists('hasProjectAccess')) {
         return $user->projects()->where('project_id', $projectId)->exists();
     }
 }
+
+
+
+

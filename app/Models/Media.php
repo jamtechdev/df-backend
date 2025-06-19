@@ -22,16 +22,37 @@ class Media extends Model
         'metadata',
         'is_gallery_visual',
         'uploaded_by',
+        'status',
     ];
 
     protected $casts = [
         'dimensions' => 'array',
         'metadata' => 'array',
         'is_gallery_visual' => 'boolean',
+        'status' => 'boolean',
     ];
 
+    /**
+     * Polymorphic relation back to the owning model.
+     */
     public function mediable()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * Relation to media translations.
+     */
+    public function translations()
+    {
+        return $this->hasMany(MediaTranslation::class);
+    }
+
+    /**
+     * Get translation for a specific language or default.
+     */
+    public function translation($languageCode = 'en')
+    {
+        return $this->hasOne(MediaTranslation::class)->where('language_code', $languageCode);
     }
 }

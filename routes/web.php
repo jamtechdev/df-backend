@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\NationalParkController;
 use App\Http\Controllers\Admin\NationalParkTranslationController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\ThemeController;
+use App\Http\Controllers\Admin\MediaTranslationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -26,18 +27,32 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/roles/{role}/permissions/update', [RolePermissionController::class, 'updatePermissions']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-
     // Media CRUD
     Route::prefix('media')->group(function () {
         Route::get('/{id}', [MediaController::class, 'index'])->name('media.index');
         Route::get('{id}/create', [MediaController::class, 'create'])->name('media.create');
         Route::post('{id}/store', [MediaController::class, 'store'])->name('media.store');
-        Route::get('{id}/{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
-        Route::put('{id}/{media}/update', [MediaController::class, 'update'])->name('media.update');
+        Route::get('{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
+        Route::post('{id}/{media}/update', [MediaController::class, 'update'])->name('media.update');
         Route::delete('{id}/{media}/delete', [MediaController::class, 'destroy'])->name('media.destroy');
+
+
+
+
+        Route::prefix('/translations')->group(function () {
+            Route::get('{media}/', [MediaTranslationController::class, 'index'])->name('media.translations.index');
+            Route::get('{media_translation}/edit', [MediaTranslationController::class, 'edit'])->name('media.translations.edit');
+            Route::post('{media}/store', [MediaTranslationController::class, 'store'])->name('media.translations.store');
+            Route::post('{media_translation}/update-trans', [MediaTranslationController::class, 'updateTranslation'])->name('media.translations.update');
+            Route::delete('{media_translation}/delete', [MediaTranslationController::class, 'destroy'])->name('media.translations.destroy');
+        });
+
+
+        // 🔥 Toggle is_gallery_visual (for checkbox toggle in DataTable)
+        Route::post('/toggle-gallery-visual', [MediaController::class, 'toggleGalleryVisual'])->name('media.toggle-gallery-visual');
+        // 🔥 Toggle status switch (new toggle method)
+        Route::post('/toggle-status-switch', [MediaController::class, 'toggleStatusSwitch'])->name('media.toggle-status-switch');
     });
-
-
 
     // Project Permissions
     Route::prefix('projects')->group(function () {
@@ -49,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}/{user_id}', [ProjectUserController::class, 'destroy'])->name('projects.permissions.destroy');
         });
     });
+
 
     // ✅ Users → Members & Visitors CRUD
     Route::prefix('users')->group(function () {
@@ -73,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+
     // National Parks CRUD
     Route::prefix('national-parks')->group(function () {
         Route::get('/', [NationalParkController::class, 'index'])->name('national-parks.index');
@@ -88,15 +105,15 @@ Route::middleware(['auth'])->group(function () {
         });
         // National Park Translations CRUD
         Route::prefix('translations')->group(function () {
-            Route::get('/{id}', [NationalParkTranslationController::class, 'index'])->name('national-parks.translation.index');
-            Route::get('/fetch-data/{id?}', [NationalParkTranslationController::class, 'fetchData'])->name('national-parks.translation.fetchData');
-            Route::get('/{id?}/create', [NationalParkTranslationController::class, 'create'])->name('national-parks.translation.create');
-            Route::post('/upload-image', [NationalParkTranslationController::class, 'uploadImage'])->name('national-parks.translation.uploadImage');
-            Route::post('/delete-image', [NationalParkTranslationController::class, 'deleteImage'])->name('national-parks.translation.deleteImage');
-            Route::post('/{id?}/store', [NationalParkTranslationController::class, 'store'])->name('national-parks.translation.store');
-            Route::get('/{id}/edit', [NationalParkTranslationController::class, 'edit'])->name('national-parks.translation.edit');
-            Route::post('/{id}/update', [NationalParkTranslationController::class, 'update'])->name('national-parks.translation.update');
-            Route::delete('/{id}', [NationalParkTranslationController::class, 'destroy'])->name('national-parks.translation.destroy');
+            Route::get('/{id}', [NationalParkTranslationController::class, 'index'])->name('national-parks.translations.index');
+            Route::get('/{id?}/create', [NationalParkTranslationController::class, 'create'])->name('national-parks.translations.create');
+            Route::post('/upload-image', [NationalParkTranslationController::class, 'uploadImage'])->name('national-parks.translations.uploadImage');
+            Route::post('/delete-image', [NationalParkTranslationController::class, 'deleteImage'])->name('national-parks.translations.deleteImage');
+            Route::post('/{id?}/store', [NationalParkTranslationController::class, 'store'])->name('national-parks.translations.store');
+            Route::get('/{id}/edit', [NationalParkTranslationController::class, 'edit'])->name('national-parks.translations.edit');
+            Route::post('/{id}/update', [NationalParkTranslationController::class, 'update'])->name('national-parks.translations.update');
+            Route::delete('/{id}', [NationalParkTranslationController::class, 'destroy'])->name('national-parks.translations.destroy');
+            Route::get('/datatable', [NationalParkTranslationController::class, 'dataTable'])->name('national-parks.translations.datatable');
         });
 
         // Content Blocks CRUD

@@ -281,98 +281,88 @@ body.font-sans.antialiased {
   }
 }
 
+#media-table tr>* {
+  text-align: center !important;
+}
 
 
+.Logout {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  padding: 13px;
+  border-top: 1px solid #02afff;
+}
 
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+}
 
- .dataTables_length select {
-    padding: 0.375rem 0.75rem;
-    margin:0.375rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  }
-  
-  .dataTables_length select:focus {
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  }
-  
-  .dataTables_length select::-ms-expand {
-    display: none;
-  }
-  
-  .dataTables_filter input {
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  }
-  
-  .dataTables_filter input:focus {
-    border-color: #696cff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  }
-   
- 
-  .dataTables_paginate {
-    text-align: right;
-    margin-top: 1rem;
-  }
-  
-  .dataTables_paginate .paginate_button {
-    padding: 0.5rem 0.75rem;
-    margin-left: 0.25rem;
-    display: inline-block;
-    color: #007bff;
-    border: none;
-    background: none;
-    cursor: pointer;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  
-  .dataTables_paginate .paginate_button:hover {
-    color: #0056b3;
-  }
-  
-  .dataTables_paginate .paginate_button.current {
-    background-color: #696cff;
-    color: #fff !important;
-  }
-  
-  .dataTables_paginate .paginate_button.disabled {
-    pointer-events: none;
-    color: #6c757d;
-    border-color: #6c757d;
-  }
-  
-  .dataTables_paginate .paginate_button:focus {
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  }
-  
- .hand{
-   cursor: pointer;
- }
- .score{
-   display: inline-flex !important;
-   justify-content: center !important;
-   align-items: center !important;
-   height: 2.5rem !important;
-   width: 2.5rem !important;
-   font-size: 0.8125em !important;
- }
- 
-     
+.sidebar-visible .backdrop {
+  display: block;
+}
+
+/* .layout-menu {
+        width: 250px;
+        background: linear-gradient(145deg, #f0f0f0, #ffffff);
+        border-radius: 1rem;
+        padding-bottom: 2rem;
+    } */
+
+/* .menu-link {
+        transition: background 0.3s, color 0.3s;
+        color: #555;
+        background: #f9f9f9;
+    }
+
+    .menu-link:hover {
+        background: #007bff !important;
+        color: #fff !important;
+    }
+
+    .menu-link i {
+        transition: color 0.3s;
+    }
+
+    .active {
+        background: #007bff !important;
+        color: #fff !important;
+    }
+
+    .active i {
+        color: #fff !important;
+    } */
+
+.menu-sub {
+  display: none;
+}
+
+.peer:checked~.menu-sub {
+  display: block !important;
+}
+
+/* .active-sub {
+        background: #0069d9 !important;
+        color: #fff !important;
+    } */
+
+.app-brand {
+  border-radius: 1rem;
+}
+
+.app-brand-link img {
+  transition: transform 0.3s ease;
+}
+
+.app-brand-link:hover img {
+  transform: scale(1.05);
+}

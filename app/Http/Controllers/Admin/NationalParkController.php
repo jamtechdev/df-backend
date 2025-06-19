@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DataTables\NationalParkDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\NationalParkService;
@@ -35,12 +36,12 @@ class NationalParkController extends Controller
         return $slug;
     }
 
-    public function index()
+    public function index(NationalParkDataTable $dataTable)
     {
         try {
             $categories = Category::all();
             $themes = Theme::all();
-            return view('admin.national-park.index', compact('categories', 'themes'));
+            return $dataTable->render('admin.national-park.index', compact('categories', 'themes'));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to load national parks index: ' . $e->getMessage()], 500);
         }

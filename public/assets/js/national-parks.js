@@ -29,50 +29,6 @@ $(document).ready(function () {
         });
     }
 
-    // Fetch and display national parks data
-    function fetchNationalParks() {
-        showLoader();
-        axios.get('/national-parks/fetch-data')
-            .then(function (response) {
-                let nationalParks = response.data.nationalParks;
-                let tbody = $('#nationalParksTable tbody');
-                tbody.empty();
-
-                nationalParks.forEach(function (park) {
-                    let locale = document.documentElement.lang || 'en';
-                    let categoryName = '';
-                    if (park.category && park.category.translations) {
-                        let translation = park.category.translations.find(t => t.language_code === locale);
-                        categoryName = translation ? translation.name : '';
-                    }
-                    let themeName = park.theme ? park.theme.name : '';
-                    let isFeaturedChecked = park.is_featured ? 'checked' : '';
-                    let row = '<tr>' +
-                       
-                        '<td>' + themeName + '</td>' +
-                        '<td>' + park.name + '</td>' +
-                        '<td>' + park.slug + '</td>' +
-                        '<td>' + (formatDate(park.created_at) || 'N/A') + '</td>' +
-                        '<td>' + (formatDate(park.updated_at) || 'N/A') + '</td>' +
-                        '<td><div class="form-check form-switch"><input type="checkbox" class="form-check-input is-featured-toggle" data-id="' + park.id + '" ' + isFeaturedChecked + '></div></td>' +
-                        '<td>' +
-                        '<button class="btn btn-sm btn-info btn-edit ml-1" data-id="' + park.id + '"><i class="fa-solid fa-pen-to-square "></i></button>' +
-                        '<button class="btn btn-sm btn-secondary btn-translation" data-id="' + park.id + '"><i class="fa-solid fa-language"></i></button>' +
-                        '<a href="/media/' + park.id + '" class="btn btn-sm btn-warning"><i class="fa-solid fa-image"></i></a>' +
-                        '<button class="btn btn-sm btn-danger btn-delete" data-id="' + park.id + '"><i class="fa-solid fa-trash"></i></button>' +
-                        '</td>' +
-                        '</tr>';
-                    tbody.append(row);
-                });
-            })
-            .catch(function (error) {
-                console.error('Error fetching national parks:', error);
-                toastr.error('Failed to fetch national parks data.');
-            })
-            .finally(function () {
-                hideLoader();
-            });
-    }
 
     // Reset form and modal for create
     function resetForm() {
@@ -94,8 +50,11 @@ $(document).ready(function () {
     });
 
     // Open modal for edit
-    $(document).on('click', '.btn-edit', function () {
-        let id = $(this).data('id');
+    $(document).on('click', '.btn-edit', function (e) {
+        e.preventDefault();
+        const id = $(this).data('id');
+        console.log(id);
+
         showLoader();
         axios.get('/national-parks/' + id + '/edit')
             .then(function (response) {
@@ -148,7 +107,6 @@ $(document).ready(function () {
             .then(function (response) {
                 toastr.success(response.data.message);
                 $('#nationalParkModal').modal('hide');
-                fetchNationalParks();
             })
             .catch(function (error) {
                 if (error.response && error.response.data && error.response.data.errors) {
@@ -180,7 +138,6 @@ $(document).ready(function () {
         axios.delete('/national-parks/' + id)
             .then(function (response) {
                 toastr.success(response.data.message);
-                fetchNationalParks();
             })
             .catch(function (error) {
                 toastr.error('Failed to delete national park.');
@@ -220,7 +177,6 @@ $(document).ready(function () {
             })
             .then(function (response) {
                 toastr.success('Featured status updated.');
-                fetchNationalParks();
             })
             .catch(function (error) {
                 toastr.error('Failed to update featured status.');
@@ -232,7 +188,5 @@ $(document).ready(function () {
     });
 
     // Initial load
-    fetchCategoriesAndThemes().then(function () {
-        fetchNationalParks();
-    });
+    fetchCategoriesAndThemes();
 });
