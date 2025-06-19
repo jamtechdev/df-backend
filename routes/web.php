@@ -26,7 +26,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/roles/{role}/permissions/update', [RolePermissionController::class, 'updatePermissions']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-
     // Media CRUD
     Route::prefix('media')->group(function () {
         Route::get('/{id}', [MediaController::class, 'index'])->name('media.index');
@@ -35,18 +34,24 @@ Route::middleware(['auth'])->group(function () {
         Route::get('{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
         Route::post('{id}/{media}/update', [MediaController::class, 'update'])->name('media.update');
         Route::delete('{id}/{media}/delete', [MediaController::class, 'destroy'])->name('media.destroy');
-        Route::get('{media}/translations', [MediaTranslationController::class, 'index'])->name('media.translations.index');
-        Route::get('translations/{media_translation}/edit', [MediaTranslationController::class, 'edit'])->name('media.translations.edit');
-        Route::post('translations/{media_translation}/update', [MediaTranslationController::class, 'update'])->name('media.translations.update');
-        Route::delete('translations/{media_translation}/delete', [MediaTranslationController::class, 'destroy'])->name('media.translations.destroy');
+
+
+
+
+        Route::prefix('/translations')->group(function () {
+            Route::get('{media}/', [MediaTranslationController::class, 'index'])->name('media.translations.index');
+            Route::get('{media_translation}/edit', [MediaTranslationController::class, 'edit'])->name('media.translations.edit');
+            Route::post('{media}/store', [MediaTranslationController::class, 'store'])->name('media.translations.store');
+            Route::post('{media_translation}/update-trans', [MediaTranslationController::class, 'updateTranslation'])->name('media.translations.update');
+            Route::delete('{media_translation}/delete', [MediaTranslationController::class, 'destroy'])->name('media.translations.destroy');
+        });
+
+
         // 🔥 Toggle is_gallery_visual (for checkbox toggle in DataTable)
         Route::post('/toggle-gallery-visual', [MediaController::class, 'toggleGalleryVisual'])->name('media.toggle-gallery-visual');
         // 🔥 Toggle status switch (new toggle method)
         Route::post('/toggle-status-switch', [MediaController::class, 'toggleStatusSwitch'])->name('media.toggle-status-switch');
     });
-
-
-
 
     // Project Permissions
     Route::prefix('projects')->group(function () {
@@ -58,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}/{user_id}', [ProjectUserController::class, 'destroy'])->name('projects.permissions.destroy');
         });
     });
+
 
     // ✅ Users → Members & Visitors CRUD
     Route::prefix('users')->group(function () {
@@ -82,6 +88,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    
     // National Parks CRUD
     Route::prefix('national-parks')->group(function () {
         Route::get('/', [NationalParkController::class, 'index'])->name('national-parks.index');

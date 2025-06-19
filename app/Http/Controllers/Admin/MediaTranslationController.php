@@ -4,11 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\DataTables\MediaTranslationDataTable;
 use App\Http\Controllers\Controller;
-use App\Models\MediaTranslation;
+use App\Services\MediaTranslationService;
 use Illuminate\Http\Request;
 
 class MediaTranslationController extends Controller
 {
+    protected $mediaTranslationService;
+
+    public function __construct(MediaTranslationService $mediaTranslationService)
+    {
+        $this->mediaTranslationService = $mediaTranslationService;
+    }
+
     public function index(MediaTranslationDataTable $dataTable, $mediaId)
     {
         $media = \App\Models\Media::findOrFail($mediaId);
@@ -16,46 +23,68 @@ class MediaTranslationController extends Controller
         return $dataTable->render('admin.media.translations.index', compact('mediaId', 'media'));
     }
 
-    public function edit($mediaTranslationId)
-    {
-        try {
-            $translation = MediaTranslation::findOrFail($mediaTranslationId);
-            return view('admin.media.translations.edit', compact('translation'));
-        } catch (\Exception $e) {
-            return back()->withErrors('Failed to load translation: ' . $e->getMessage());
-        }
-    }
-
-    public function update(Request $request, $mediaTranslationId)
+    public function store(Request $request, $mediaId)
     {
         try {
             $validated = $request->validate([
-                'language' => 'required|string|max:10',
+                'language_code' => 'required|string|max:10',
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
+                'status' => 'nullable|string|max:50',
+                'overlay_title' => 'nullable|string|max:255',
+                'overlay_subtitle' => 'nullable|string|max:255',
+                'overlay_description' => 'nullable|string',
+                'subtitle' => 'nullable|string|max:255',
             ]);
 
-            $translation = MediaTranslation::findOrFail($mediaTranslationId);
-            $translation->update($validated);
+            $this->mediaTranslationService->createTranslation($mediaId, $validated);
 
-            return redirect()->route('media.translations.index', ['media' => $translation->media_id])
-                ->with('success', 'Translation updated successfully.');
+            return response()->json(['success' => true, 'message' => 'Translation created successfully.']);
         } catch (\Exception $e) {
-            return back()->withErrors('Update failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Create failed: ' . $e->getMessage()], 400);
+        }
+    }
+
+    public function edit($mediaTranslationId)
+    {
+        try {
+            $translation = $this->mediaTranslationService->getTranslation($mediaTranslationId);
+            return response()->json(['success' => true, 'data' => $translation]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to load translation: ' . $e->getMessage()], 400);
+        }
+    }
+
+    public function updateTranslation(Request $request, $mediaTranslationId)
+    {
+        try {
+            $validated = $request->validate([
+                'language_code' => 'required|string|max:10',
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'status' => 'nullable|string|max:50',
+                'overlay_title' => 'nullable|string|max:255',
+                'overlay_subtitle' => 'nullable|string|max:255',
+                'overlay_description' => 'nullable|string',
+                'subtitle' => 'nullable|string|max:255',
+            ]);
+
+            $this->mediaTranslationService->updateTranslation($mediaTranslationId, $validated);
+
+            return response()->json(['success' => true, 'message' => 'Translation updated successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Update failed: ' . $e->getMessage()], 400);
         }
     }
 
     public function destroy($mediaTranslationId)
     {
         try {
-            $translation = MediaTranslation::findOrFail($mediaTranslationId);
-            $mediaId = $translation->media_id;
-            $translation->delete();
+            $this->mediaTranslationService->deleteTranslation($mediaTranslationId);
 
-            return redirect()->route('media.translations.index', ['media' => $mediaId])
-                ->with('success', 'Translation deleted successfully.');
+            return response()->json(['success' => true, 'message' => 'Translation deleted successfully.']);
         } catch (\Exception $e) {
-            return back()->withErrors('Delete failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Delete failed: ' . $e->getMessage()], 400);
         }
     }
 }

@@ -96,6 +96,7 @@ class MediaController extends Controller
 
     public function update(Request $request, $parkId, $mediaId)
     {
+        // dd($request->all());
         try {
             $validated = $request->validate([
                 'files'   => 'nullable|array', // not required now

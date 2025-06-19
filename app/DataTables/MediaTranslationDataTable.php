@@ -48,27 +48,29 @@ class MediaTranslationDataTable extends DataTable
                 return $row->description ?? '-';
             })
             ->addColumn('action', function ($row) {
-                $editUrl = route('media.translations.edit', ['media_translation' => $row->id]);
-                $deleteUrl = route('media.translations.destroy', ['media_translation' => $row->id]);
-                return view('components.datatable.colunms.action', [
-                    'options' => [
-                        [
-                            'href' => $editUrl,
-                            'text' => 'Edit',
-                            'icon' => 'fas fa-edit',
-                            'class' => 'btn-primary',
-                        ],
-                        [
-                            'href' => $deleteUrl,
-                            'method' => 'DELETE',
-                            'text' => 'Delete',
-                            'icon' => 'fas fa-trash',
-                            'class' => 'btn-danger',
-                            'confirm_message' => 'Are you sure to delete this translation?',
-                        ],
+                $options = [
+                    [
+                        'href' => 'javascript:void(0);',
+                        'class' => 'btn-primary edit-translation',
+                        'icon' => 'fas fa-edit',
+                        'text' => 'Edit',
+                        'method' => 'GET',
+                        'data-id' => $row->id, // you passed this
                     ],
-                ])->render();
+                    [
+                        'href' => 'javascript:void(0);', // No href, JS trigger
+                        'class' => 'btn-danger btn-delete',
+                        'icon' => 'fas fa-trash',
+                        'text' => 'Delete',
+                        'method' => 'DELETE',
+                        'confirm_message' => 'Are you sure to delete this translation?',
+                        'data-id' => $row->id, // pass ID
+                    ],
+                ];
+
+                return view('components.datatable.colunms.action', compact('options'))->render();
             })
+
             ->rawColumns(['action']);
     }
 
@@ -80,36 +82,38 @@ class MediaTranslationDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-           ->setTableId('media-translation-table')
+            ->setTableId('media-translation-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('
-                    <"row"<"col-md-6 d-flex justify-content-start"f><"col-sm-12 col-md-6 d-flex align-items-center justify-content-end"lB>>
-                    <"row"<"col-md-12"tr>>
-                    <"row"<"col-md-6"i><"col-md-6"p>>
-                ')
+            <"row"<"col-md-6 d-flex justify-content-start"f><"col-sm-12 col-md-6 d-flex align-items-center justify-content-end"lB>>
+            <"row"<"col-md-12"tr>>
+            <"row"<"col-md-6"i><"col-md-6"p>>
+        ')
             ->orderBy(1)
-            ->language(["search" => "", "lengthMenu" => "_MENU_", "searchPlaceholder" => 'Search Users'])
+            ->language(["search" => "", "lengthMenu" => "_MENU_", "searchPlaceholder" => 'Search Media'])
             ->buttons(
                 Button::make()
-                    ->className('btn btn-primary')
                     ->text('<i class="fa fa-plus"></i> New')
-                    ->visible(true)
-                    ->action('function(e, dt, node, config) {
-                                let url = "#";
-                                console.log("Button clicked. Redirecting to: " + url);
-                                window.location.href = url;
-                            }')
+                    ->attr([
+                        'id' => 'btnNewTranslation',
+                        'class' => 'btn btn-primary',
+                        'media-id' => $this->mediaId
+                    ])
             )
+
             ->parameters([
                 'paging' => true,
                 'lengthMenu' => [
-                    [5, 10, 25, 50, -1],
-                    ['5', '10', '25', '50', 'Show all']
+                    [10, 15, 25, 50, -1],
+                    ['10', '15', '25', '50', 'Show all']
                 ],
-               
+
             ]);
     }
+
+
+
 
     public function getColumns(): array
     {

@@ -284,3 +284,85 @@ body.font-sans.antialiased {
 #media-table tr>* {
   text-align: center !important;
 }
+
+
+.Logout {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  padding: 13px;
+  border-top: 1px solid #02afff;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+}
+
+.sidebar-visible .backdrop {
+  display: block;
+}
+
+/* .layout-menu {
+        width: 250px;
+        background: linear-gradient(145deg, #f0f0f0, #ffffff);
+        border-radius: 1rem;
+        padding-bottom: 2rem;
+    } */
+
+/* .menu-link {
+        transition: background 0.3s, color 0.3s;
+        color: #555;
+        background: #f9f9f9;
+    }
+
+    .menu-link:hover {
+        background: #007bff !important;
+        color: #fff !important;
+    }
+
+    .menu-link i {
+        transition: color 0.3s;
+    }
+
+    .active {
+        background: #007bff !important;
+        color: #fff !important;
+    }
+
+    .active i {
+        color: #fff !important;
+    } */
+
+.menu-sub {
+  display: none;
+}
+
+.peer:checked~.menu-sub {
+  display: block !important;
+}
+
+/* .active-sub {
+        background: #0069d9 !important;
+        color: #fff !important;
+    } */
+
+.app-brand {
+  border-radius: 1rem;
+}
+
+.app-brand-link img {
+  transition: transform 0.3s ease;
+}
+
+.app-brand-link:hover img {
+  transform: scale(1.05);
+}

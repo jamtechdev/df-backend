@@ -51,13 +51,13 @@ class MediaDataTable extends DataTable
                         'href'  => route('media.translations.index', ['media' => $row->id]),
                         'text'  => 'Translations',
                         'icon'  => 'fas fa-language',
-                        'class' => 'btn-primary edit-media',
+                        'class' => 'btn-primary',
                     ],
                     [
                         'href'  => route('media.edit', ['media' => $row->id]),
                         'text'  => 'Edit',
                         'icon'  => 'fas fa-edit',
-                        'class' => 'btn-primary edit-media',
+                        'class' => 'btn-warning',
                     ],
                     [
                         'href'            => route('media.destroy', ['id' => $this->parkId, 'media' => $row->id]),
@@ -69,10 +69,9 @@ class MediaDataTable extends DataTable
                     ]
                 ];
 
-                return '<div class="text-center">'
-                    . view('components.datatable.colunms.action', ['options' => $options])->render()
-                    . '</div>';
+                return view('components.datatable.colunms.action', compact('options'))->render();
             })
+
             ->editColumn('is_gallery_visual', function ($row) {
                 $checked = $row->is_gallery_visual ? 'checked' : '';
                 return '<div class="text-center">

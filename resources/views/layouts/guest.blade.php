@@ -10,8 +10,11 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <style>
         .bg-gradient-custom {
-            background: linear-gradient(135deg, #0d6efd 0%, #ACB6E5 100%);
+            background:
+                /* linear-gradient(135deg, rgba(13, 110, 253, 0.7) 0%, rgba(172, 182, 229, 0.7) 100%), */
+                url('/img/login-background.png') no-repeat center center / cover;
         }
+
 
         .card {
             background-color: rgba(255, 255, 255, 0.95);
@@ -33,7 +36,7 @@
         @yield('content')
     </main>
 
-   
+
 </body>
 
 </html>
