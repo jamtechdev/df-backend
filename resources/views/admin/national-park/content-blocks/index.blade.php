@@ -1,34 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-
-
-<div class="container-fluid mt-5">
+<div class="container-fluid flex-grow-1 container-p-y">
     <div class="row">
-        <div class="col-md-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Content blocks</h4>
-                <button id="btnAdd" class="btn btn-primary"><i class="fa-solid fa-plus me-2"></i>Add New Content</button>
-            </div>
-            <div class="theme-table">
-                <table class="table" id="contentBlocksTable">
-                    <thead>
-                        <tr>
-                            <th>Section Type</th>
-                            <th>Heading</th>
-                            <th>Subheading</th>
-                            <th>Icon</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Sort Order</th>
-                            <th>Active</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be populated by JS -->
-                    </tbody>
-                </table>
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="card">
+                <h5 class="card-header">Manage Content Blocks</h5>
+                <div class="card-body">
+                    {!! $dataTable->table(['class' => 'table table-bordered table-striped'], true) !!}
+                </div>
             </div>
         </div>
     </div>
@@ -92,11 +72,10 @@
                         </div>
 
                         <div class="col-12">
-                            <label for="descriptionEditor" class="form-label">
+                            <label for="description" class="form-label">
                                 <i class="fa fa-align-left me-1 text-primary"></i> Description
                             </label>
-                            <div id="descriptionEditor" style="height: 150px;"></div>
-                            <input type="hidden" id="description" name="description">
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                         </div>
 
                         <div class="col-md-6">
@@ -118,11 +97,12 @@
 
                 </div>
                 <div class="modal-footer bg-light">
-                    <button type="submit" class="btn btn-success" id="saveBtn">
-                        <i class="fa fa-save me-1"></i> Save
-                    </button>
+
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fa fa-times me-1"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-success" id="saveBtn">
+                        <i class="fa fa-save me-1"></i> Save
                     </button>
                 </div>
             </form>
@@ -134,10 +114,9 @@
 
 @push('scripts')
 <script>
-    window.contentBlocksFetchDataUrl = @json(route('national-parks.content-blocks.fetchData', ['np_translation_id' => $np_translation_id]));
-    window.contentBlocksBaseUrl = @json(url("national-parks/content-blocks/{$np_translation_id}"));
-    window.npTranslationId = @json($np_translation_id); // Pass this also for JS to access
+    window.npTranslationId = @json($np_translation_id);
 </script>
+{{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 
-<script src="{{asset('assets/js/content-blocks.js')}}"></script>
+<script src="{{ asset('assets/js/content-blocks.js') }}"></script>
 @endpush

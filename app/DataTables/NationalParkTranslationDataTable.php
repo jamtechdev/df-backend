@@ -39,7 +39,7 @@ class NationalParkTranslationDataTable extends DataTable
                     ],
                     [
                         'href' => url('/national-parks/content-blocks/' . $translation->id),
-                        'class' => 'btn-info btn-sm mb-2',
+                        'class' => 'btn-dark btn-sms',
                         'icon' => 'fa-solid fa-plus',
                         'text' => 'Content',
                         'data' => ['id' => $translation->id],
@@ -65,13 +65,13 @@ class NationalParkTranslationDataTable extends DataTable
 
             ->rawColumns(['actions'])
             ->editColumn('published_at', function (NationalParkTranslation $translation) {
-                return $translation->published_at ? $translation->published_at->format('Y-m-d H:i:s') : 'N/A';
+                return $translation->published_at ? $translation->published_at->format('Y-m-d') : 'N/A';
             })
             ->editColumn('created_at', function (NationalParkTranslation $translation) {
-                return $translation->created_at ? $translation->created_at->format('Y-m-d H:i:s') : 'N/A';
+                return $translation->created_at ? $translation->created_at->format('Y-m-d') : 'N/A';
             })
             ->editColumn('updated_at', function (NationalParkTranslation $translation) {
-                return $translation->updated_at ? $translation->updated_at->format('Y-m-d H:i:s') : 'N/A';
+                return $translation->updated_at ? $translation->updated_at->format('Y-m-d') : 'N/A';
             });
     }
 
@@ -127,7 +127,7 @@ class NationalParkTranslationDataTable extends DataTable
             Column::computed('actions')
                 ->exportable(false)
                 ->printable(false)
-                ->width(250)
+                ->width(400)
                 ->addClass('text-center'),
         ];
     }

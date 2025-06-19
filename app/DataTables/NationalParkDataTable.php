@@ -31,28 +31,28 @@ class NationalParkDataTable extends DataTable
                         'href' => 'javascript:void(0);',
                         'class' => 'btn-info btn-edit ml-1',
                         'icon' => 'fa-solid fa-pen-to-square',
-                        'text' => '',
+                        'text' => 'Edit',
                         'data' => ['id' => $park->id], // All data attributes here
                     ],
                     [
                         'href' => 'javascript:void(0);',
                         'class' => 'btn-secondary btn-translation',
                         'icon' => 'fa-solid fa-language',
-                        'text' => '',
+                        'text' => 'Translations',
                         'data' => ['id' => $park->id],
                     ],
                     [
                         'href' => url('/media/' . $park->id),
                         'class' => 'btn-warning',
                         'icon' => 'fa-solid fa-image',
-                        'text' => '',
+                        'text' => 'Media',
                         'data' => ['id' => $park->id],
                     ],
                     [
                         'href' => 'javascript:void(0);',
                         'class' => 'btn-danger btn-delete',
                         'icon' => 'fa-solid fa-trash',
-                        'text' => '',
+                        'text' => 'Delete',
                         'data' => ['id' => $park->id],
                     ],
                 ];
@@ -123,7 +123,7 @@ class NationalParkDataTable extends DataTable
             Column::computed('actions')
                 ->exportable(false)
                 ->printable(false)
-                ->width(150)
+                ->width(400)
                 ->addClass('text-center'),
         ];
     }

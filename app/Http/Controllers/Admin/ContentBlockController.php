@@ -7,14 +7,18 @@ use App\Models\ContentBlock;
 use App\Models\NationalParkTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\DataTables\ContentBlockDataTable;
 
 class ContentBlockController extends Controller
 {
-    public function index($np_translation_id)
+    public function index(ContentBlockDataTable $dataTable, $np_translation_id)
     {
-        return view('admin.national-park.content-blocks.index', compact('np_translation_id'));
+        $dataTable->setTranslationId($np_translation_id);
+        return $dataTable->render('admin.national-park.content-blocks.index', compact('np_translation_id'));
     }
 
+    // Commenting out fetchData as DataTable will handle ajax
+    /*
     public function fetchData(Request $request, $np_translation_id)
     {
         $query = ContentBlock::orderBy('sort_order');
@@ -26,7 +30,7 @@ class ContentBlockController extends Controller
         $contentBlocks = $query->get();
         return response()->json($contentBlocks);
     }
-
+    */
 
     public function store(Request $request,$np_translation_id)
     {
@@ -46,6 +50,12 @@ class ContentBlockController extends Controller
         $contentBlock = ContentBlock::create($validated);
 
         return response()->json(['message' => 'Content block created successfully', 'contentBlock' => $contentBlock]);
+    }
+
+    public function edit($np_translation_id, $id)
+    {
+        $content_block = ContentBlock::findOrFail($id);
+        return response()->json(['contentBlock' => $content_block]);
     }
 
     public function update(Request $request ,$np_translation_id, $id)
