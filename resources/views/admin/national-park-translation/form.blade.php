@@ -4,14 +4,14 @@
 <div class="container mt-5">
     <div class="card shadow-lg rounded-4 border-0">
         <div class="card-header bg-gradient-primary text-dark fw-bold fs-5">
-            {{ isset($translation) ? 'Update' : 'Add' }} {{ $nationalPark->name }} Details
+            {{ isset($translation) ? 'Update' : 'Add' }} {{ $nationalPark->name ?? '' }} Details
         </div>
         <div class="card-body p-4">
             <div id="loader" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); z-index: 1050; text-align: center; padding-top: 200px; font-size: 1.5rem; font-weight: bold;">
                 Loading...
             </div>
 
-            <form id="translationForm" method="POST" action="{{ isset($translation) ? route('national-parks.translation.update', [$translation->id]) : route('national-parks.translation.store', $nationalPark->id) }}" novalidate>
+            <form id="translationForm" method="POST" action="{{ isset($translation) ? route('national-parks.translation.update', [$translation->id]) : route('national-parks.translation.store', $nationalPark->id ?? 0) }}" novalidate>
                 @csrf
 
                 {{-- Lead Quote & Language --}}
@@ -27,13 +27,13 @@
                             <option value="en" {{ old('language_code', $translation->language_code ?? '') == 'en' ? 'selected' : '' }}>English</option>
                             <option value="es" {{ old('language_code', $translation->language_code ?? '') == 'es' ? 'selected' : '' }}>Spanish</option>
                         </select>
-                        <input type="hidden" name="national_park_id" value="{{ old('national_park_id', $translation->national_park_id ?? $nationalPark->id) }}">
+                        <input type="hidden" name="national_park_id" value="{{ old('national_park_id', $translation->national_park_id ?? $nationalPark->id ?? 0) }}">
                         @error('language_code')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Select Theme</label>
                         <select name="theme_id" class="form-select @error('theme_id') is-invalid @enderror">
-                            @foreach($themes as $theme)
+                            @foreach($themes ?? [] as $theme)
                                 <option value="{{ $theme->id }}" {{ old('theme_id', $translation->theme_id ?? '') == $theme->id ? 'selected' : '' }}>{{ $theme->name }}</option>
                             @endforeach
                         </select>
@@ -69,7 +69,9 @@
                 </div>
 
                 {{-- Closing Quote --}}
-                @php $closing = old('closing_quote', $translation->closing_quote ?? [['title' => '', 'description' => '']]); @endphp
+                @php 
+                    $closing = old('closing_quote', $translation->closing_quote ?? [['title' => '', 'description' => '']]); 
+                @endphp
                 <div class="mb-4">
                     <label class="form-label">Closing Quote Title</label>
                     <input type="text" name="closing_quote[0][title]" class="form-control @error('closing_quote.0.title') is-invalid @enderror" value="{{ $closing[0]['title'] ?? '' }}">
@@ -82,16 +84,18 @@
                 </div>
 
                 {{-- Park Stats --}}
-                @php $oldStats = old('park_stats', $translation->park_stats ?? [['icon'=>'', 'value'=>'', 'label'=>'', 'description'=>'']]); @endphp
+                @php 
+                    $oldStats = old('park_stats', $translation->park_stats ?? [['icon'=>'', 'value'=>'', 'label'=>'', 'description'=>'']]); 
+                @endphp
                 <div class="mb-4">
                     <label class="form-label fw-semibold">Park Stats (Add More)</label>
                     <div id="parkStatsRepeater">
                         @foreach ($oldStats as $index => $stat)
                         <div class="row g-2 mb-2 border rounded p-3 bg-light position-relative park-stat-item">
-                            <div class="col-md-2"><input type="text" name="park_stats[{{ $index }}][icon]" value="{{ $stat['icon'] }}" placeholder="Icon" class="form-control"></div>
-                            <div class="col-md-2"><input type="text" name="park_stats[{{ $index }}][value]" value="{{ $stat['value'] }}" placeholder="Value" class="form-control"></div>
-                            <div class="col-md-3"><input type="text" name="park_stats[{{ $index }}][label]" value="{{ $stat['label'] }}" placeholder="Label" class="form-control"></div>
-                            <div class="col-md-4"><input type="text" name="park_stats[{{ $index }}][description]" value="{{ $stat['description'] }}" placeholder="Description" class="form-control"></div>
+                            <div class="col-md-2"><input type="text" name="park_stats[{{ $index }}][icon]" value="{{ $stat['icon'] ?? '' }}" placeholder="Icon" class="form-control"></div>
+                            <div class="col-md-2"><input type="text" name="park_stats[{{ $index }}][value]" value="{{ $stat['value'] ?? '' }}" placeholder="Value" class="form-control"></div>
+                            <div class="col-md-3"><input type="text" name="park_stats[{{ $index }}][label]" value="{{ $stat['label'] ?? '' }}" placeholder="Label" class="form-control"></div>
+                            <div class="col-md-4"><input type="text" name="park_stats[{{ $index }}][description]" value="{{ $stat['description'] ?? '' }}" placeholder="Description" class="form-control"></div>
                             <div class="col-md-1 d-flex align-items-end"><button type="button" class="btn btn-danger btn-sm remove-stat">Remove</button></div>
                         </div>
                         @endforeach
@@ -100,7 +104,9 @@
                 </div>
 
                 {{-- Hero Section --}}
-                @php $hero = old('hero_section', $translation->hero_image_content ?? ['background' => '', 'title' => '']); @endphp
+                @php 
+                    $hero = old('hero_section', $translation->hero_image_content ?? ['background' => '', 'title' => '']); 
+                @endphp
                 <div class="mb-4">
                     <label class="form-label fw-semibold">Hero Section</label>
                     <div id="hero-dropzone" class="dropzone bg-light p-4 border rounded text-center" data-upload-url="{{ route('national-parks.translation.uploadImage') }}">
@@ -114,7 +120,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <a href="{{ route('national-parks.translation.index',$nationalPark->id) }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('national-parks.translation.index', $nationalPark->id ?? 0) }}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-success">{{ isset($translation) ? 'Update' : 'Create' }} Translation</button>
                 </div>
             </form>

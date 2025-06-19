@@ -9,8 +9,10 @@ return new class extends Migration {
     {
         Schema::create('media', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('mediable_id');
-            $table->string('mediable_type');
+
+            // Polymorphic relation
+            $table->morphs('mediable'); // this will create `mediable_id` and `mediable_type`
+
             $table->string('type')->nullable(); // hero_image, gallery_image, etc.
             $table->string('s3_bucket')->nullable();
             $table->string('s3_url')->nullable();

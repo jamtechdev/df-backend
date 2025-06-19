@@ -49,7 +49,6 @@ $(document).ready(function () {
                         '<td>' +
                         '<a href="/national-parks/translations/' + t.id + '/edit" class="btn btn-sm btn-info me-2">Edit</a>' +
                         '<a href="/national-parks/content-blocks/' + t.id + '" class="btn btn-sm btn-info me-2">+ Content</a>' +
-                        '<a href="/national-parks/translations/media/' + t.id + '" class="btn btn-sm btn-info me-2">+ Media</a>' +
                         '<button class="btn btn-sm btn-danger btn-delete" data-id="' + t.id + '" data-national-park-id="' + t.national_park_id + '">Delete</button>' +
                         '</td>' +
                         '</tr>';

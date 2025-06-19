@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\Admin\NationalParkController;
 use App\Http\Controllers\Admin\NationalParkTranslationController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MediaTranslationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -31,10 +32,19 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}', [MediaController::class, 'index'])->name('media.index');
         Route::get('{id}/create', [MediaController::class, 'create'])->name('media.create');
         Route::post('{id}/store', [MediaController::class, 'store'])->name('media.store');
-        Route::get('{id}/{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
-        Route::put('{id}/{media}/update', [MediaController::class, 'update'])->name('media.update');
+        Route::get('{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
+        Route::post('{id}/{media}/update', [MediaController::class, 'update'])->name('media.update');
         Route::delete('{id}/{media}/delete', [MediaController::class, 'destroy'])->name('media.destroy');
+        Route::get('{media}/translations', [MediaTranslationController::class, 'index'])->name('media.translations.index');
+        Route::get('translations/{media_translation}/edit', [MediaTranslationController::class, 'edit'])->name('media.translations.edit');
+        Route::post('translations/{media_translation}/update', [MediaTranslationController::class, 'update'])->name('media.translations.update');
+        Route::delete('translations/{media_translation}/delete', [MediaTranslationController::class, 'destroy'])->name('media.translations.destroy');
+        // 🔥 Toggle is_gallery_visual (for checkbox toggle in DataTable)
+        Route::post('/toggle-gallery-visual', [MediaController::class, 'toggleGalleryVisual'])->name('media.toggle-gallery-visual');
+        // 🔥 Toggle status switch (new toggle method)
+        Route::post('/toggle-status-switch', [MediaController::class, 'toggleStatusSwitch'])->name('media.toggle-status-switch');
     });
+
 
 
 

@@ -9,9 +9,18 @@ class NationalPark extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'name', 'slug', 'theme_id', 'seo_title', 'seo_description', 'seo_keywords', 'is_featured'];
+    protected $fillable = [
+        'category_id',
+        'name',
+        'slug',
+        'theme_id',
+        'seo_title',
+        'seo_description',
+        'seo_keywords',
+        'is_featured'
+    ];
 
-
+    // Relations
     public function translations()
     {
         return $this->hasMany(NationalParkTranslation::class);
@@ -25,5 +34,13 @@ class NationalPark extends Model
     public function theme()
     {
         return $this->belongsTo(Theme::class);
+    }
+
+    /**
+     * Polymorphic relation for media.
+     */
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'mediable');
     }
 }
