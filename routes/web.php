@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\Admin\NationalParkController;
 use App\Http\Controllers\Admin\NationalParkTranslationController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\ThemeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -107,5 +108,13 @@ Route::middleware(['auth'])->group(function () {
             Route::put('{np_translation_id}/{content_block}/update', [\App\Http\Controllers\Admin\ContentBlockController::class, 'update'])->name('national-parks.content-blocks.update');
             Route::delete('/{np_translation_id}/{content_block}/delete', [\App\Http\Controllers\Admin\ContentBlockController::class, 'destroy'])->name('national-parks.content-blocks.destroy');
         });
+    });
+
+    // theme CRUD
+        Route::prefix('themes')->group(function () {
+        Route::get('/', [ThemeController::class, 'index'])->name('themes.index');
+        Route::post('/', [ThemeController::class, 'store'])->name('themes.store'); // ✅ FIXED
+        Route::post('/{id}', [ThemeController::class, 'update'])->name('themes.update'); // Using POST + _method=PUT
+        Route::delete('/{id}', [ThemeController::class, 'destroy'])->name('themes.delete');
     });
 });

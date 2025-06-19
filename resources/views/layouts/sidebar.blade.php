@@ -112,6 +112,17 @@
             </li>
         @endforeach
 
+
+        {{-- theme  --}}
+
+        <li class="menu-item mb-3">
+            <a href="{{ route('themes.index') }}"
+                class="menu-link d-flex align-items-center rounded px-3 py-2 text-decoration-none {{ request()->routeIs('themes.index') ? 'active' : '' }}">
+                <i class="fas fa-folder me-2"></i>
+                <span>Theme</span>
+            </a>
+        </li>
+
     </ul>
       <div class="Logout">
             <form method="POST" action="{{ route('logout') }}">
