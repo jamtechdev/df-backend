@@ -9,6 +9,8 @@ use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
+use Carbon\Carbon;
+
 
 class ThemesDataTable extends DataTable
 {
@@ -20,6 +22,9 @@ class ThemesDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at ? Carbon::parse($row->created_at)->format('d/m/Y') : '';
+            })
             ->addColumn('action', function ($row) {
                 return '
                 <div class="d-flex gap-1 justify-content-center">
@@ -119,10 +124,8 @@ class ThemesDataTable extends DataTable
         return [
             Column::make('id')->title('ID'),
             Column::make('name')->title('Theme Name'),
-            Column::make('root')->title('Root'),
             Column::make('slug')->title('Slug'),
             Column::make('created_at')->title('Created At'),
-            Column::make('updated_at')->title('Updated At'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
