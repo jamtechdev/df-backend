@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-lg-12 mb-4 order-0">
                 <div class="card">
-                    <h5 class="card-header">Manage Themes</h5>
+                    <h5 class="card-header bg-primary text-white d-flex justify-content-between align-items-center">Manage Themes</h5>
                     <div class="card-body">
                         {{ $dataTable->table() }}
 

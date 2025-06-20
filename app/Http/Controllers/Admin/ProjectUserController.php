@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Services\ProjectUserService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use App\DataTables\ProjectUserDataTable;
 
 class ProjectUserController extends Controller
 {
@@ -19,10 +20,10 @@ class ProjectUserController extends Controller
         $this->projectUserService = $projectUserService;
     }
 
-    public function index()
+    public function index(ProjectUserDataTable $dataTable)
     {
         try {
-            return view('admin.project.user.index');
+            return $dataTable->render('admin.project.user.index');
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to load project user index: ' . $e->getMessage()], 500);
         }
@@ -33,7 +34,7 @@ class ProjectUserController extends Controller
         try {
             $data = $this->projectUserService->fetchData();
 
-            $projectUserRoles = \DB::table('project_user')
+            $projectUserRoles = DB::table('project_user')
                 ->join('projects', 'projects.id', '=', 'project_user.project_id')
                 ->join('users', 'users.id', '=', 'project_user.user_id')
                 ->select(
@@ -41,25 +42,35 @@ class ProjectUserController extends Controller
                     'projects.id as project_id',
                     'projects.name as project_name',
                     'users.id as user_id',
-                    \DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"),
+                    DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"),
                     'users.email',
                     'project_user.role'
                 )
                 ->get();
 
-            $users = \DB::table('users')
-                ->select('id', 'first_name', 'last_name')
-                ->get();
+            $projects = DB::table('projects')->select('id', 'name')->get();
+
+            // Fetch users with roles included and selected project
+            $users = \App\Models\User::with('roles')->get()->map(function ($user) use ($projectUserRoles) {
+                $userProject = $projectUserRoles->firstWhere('user_id', $user->id);
+                return [
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'roles' => $user->roles->pluck('name')->toArray(),
+                    'selected_project_id' => $userProject ? $userProject->project_id : null,
+                ];
+            });
 
             return response()->json([
                 'project_user_roles' => $projectUserRoles,
                 'users' => $users,
+                'projects' => $projects,
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch project user data: ' . $e->getMessage()], 500);
         }
     }
-
 
     public function getUserRoles($userId)
     {
@@ -106,8 +117,6 @@ class ProjectUserController extends Controller
             return response()->json(['message' => $e->getMessage()], 422);
         }
     }
-
-
 
     public function destroy($project_id, $user_id)
     {

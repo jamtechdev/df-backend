@@ -31,7 +31,7 @@
             <input type="text" class="form-control" id="slug" name="slug" required maxlength="255" value="{{ $nationalPark->slug }}">
         </div>
         <button type="submit" class="btn btn-primary mt-2">Update</button>
-        <a href="{{ route('national-parks.index') }}" class="btn btn-secondary mt-2">Cancel</a>
+        <a href="{{ route('national-parks.index') }}" class="btn btn-info mt-2">Cancel</a>
     </form>
 </div>
 @endsection

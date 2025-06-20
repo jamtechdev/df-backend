@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-lg-12 mb-4 order-0">
             <div class="card">
-                <h5 class="card-header">National Parks Media </h5>
+                <h5 class="card-header bg-primary text-white d-flex justify-content-between align-items-center">National Parks Media </h5>
                 <div class="card-body">
                     {!! $dataTable->table(['class' => 'table table-bordered table-striped', 'id' => 'nationalParkMedia'], true) !!}
                 </div>

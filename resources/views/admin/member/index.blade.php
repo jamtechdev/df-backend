@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-lg-12 mb-4 order-0">
             <div class="card">
-                <h5 class="card-header">Manage Members</h5>
+                <h5 class="card-header bg-primary text-white d-flex justify-content-between align-items-center">Manage Members</h5>
                 <div class="card-body">
                     {!! $dataTable->table(['class' => 'table table-bordered table-striped'], true) !!}
                 </div>
@@ -15,55 +15,78 @@
 </div>
 
 <!-- Create/Edit Member Modal -->
-<div class="modal fade" id="memberModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
-        <form id="memberForm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="memberModalTitle">Add Member</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form id="memberForm" novalidate>
+            <div class="modal-content rounded-4 shadow-lg">
+                <div class="modal-header bg-gradient bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title" id="memberModalLabel">
+                        <i class="fa fa-user me-2"></i>Add Member
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" id="memberId" />
-                    <div class="mb-3">
-                        <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" id="firstName" name="first_name" class="form-control" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" id="lastName" name="last_name" class="form-control" required />
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" required />
-                    </div>
-                    <div class="mb-3" id="passwordGroup">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" required autocomplete="off" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="projectId" class="form-label">Project</label>
-                        <select id="projectId" name="project_id" class="form-select" required>
-                            <option value="">Select Project</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Roles</label>
-                        <div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="roleContentManager" name="roles[]" value="content_manager" />
-                                <label class="form-check-label" for="roleContentManager">Content Manager</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="roleManager" name="roles[]" value="manager" />
-                                <label class="form-check-label" for="roleManager">Manager</label>
-                            </div>
+                <div class="modal-body bg-light p-4">
+                    <input type="hidden" id="memberId" name="memberId">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="firstName" name="first_name" required maxlength="255" placeholder="First Name">
+                            <div class="invalid-feedback">First name is required.</div>
                         </div>
+
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="lastName" name="last_name" required maxlength="255" placeholder="Last Name">
+                            <div class="invalid-feedback">Last name is required.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" required maxlength="255" placeholder="Email">
+                            <div class="invalid-feedback">Valid email is required.</div>
+                        </div>
+
+                        <div class="col-md-6" id="passwordGroup">
+                            <label for="password" class="form-label">Password <span class="text-danger" id="passwordRequiredMark">*</span></label>
+                            <input type="password" class="form-control" id="password" name="password" autocomplete="off" maxlength="255" placeholder="Password" required>
+                            <div class="invalid-feedback">Password is required.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="projectId" class="form-label">Project <span class="text-danger">*</span></label>
+                            <select id="projectId" name="project_id" class="form-select" required>
+                                <option value="">Select Project</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a project.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Roles <span class="text-danger">*</span></label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="roleContentManager" name="roles" value="content_manager" required>
+                                    <label class="form-check-label" for="roleContentManager">Content Manager</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="roleManager" name="roles" value="manager" required>
+                                    <label class="form-check-label" for="roleManager">Manager</label>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback">Please select a role.</div>
+                        </div>
+
                     </div>
+
+                    <div id="formErrors" class="alert alert-danger d-none mt-3"></div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="saveMemberBtn">Save</button>
+                <div class="modal-footer bg-light border-0 rounded-bottom-4">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times me-1"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveMemberBtn">
+                        <i class="fa fa-save me-1"></i>Save
+                    </button>
                 </div>
             </div>
         </form>

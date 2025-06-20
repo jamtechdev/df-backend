@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-5">
     <div class="card shadow-lg rounded-4 border-0">
-        <div class="card-header bg-gradient-primary text-dark fw-bold fs-5">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             {{ isset($translation) ? 'Update' : 'Add' }} {{ $nationalPark->name ?? '' }} Details
         </div>
         <div class="card-body p-4">
@@ -120,7 +120,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <a href="{{ route('national-parks.translations.index', $nationalPark->id ?? 0) }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('national-parks.translations.index', $nationalPark->id ?? 0) }}" class="btn btn-info">Cancel</a>
                     <button type="submit" class="btn btn-success">{{ isset($translation) ? 'Update' : 'Create' }} Translation</button>
                 </div>
             </form>

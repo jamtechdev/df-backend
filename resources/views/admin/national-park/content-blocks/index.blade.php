@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-lg-12 mb-4 order-0">
             <div class="card">
-                <h5 class="card-header">Manage Content Blocks</h5>
+                <h5 class="card-header bg-primary text-white d-flex justify-content-between align-items-center">Manage Content Blocks</h5>
                 <div class="card-body">
                     {!! $dataTable->table(['class' => 'table table-bordered table-striped'], true) !!}
                 </div>
@@ -16,16 +16,16 @@
 
 <!-- Modal -->
 <div class="modal fade" id="contentBlockModal" tabindex="-1" aria-labelledby="contentBlockModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content shadow-lg border-0">
-            <form id="contentBlockForm">
-                <div class="modal-header bg-primary text-white">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form id="contentBlockForm" novalidate>
+            <div class="modal-content rounded-4 shadow-lg">
+                <div class="modal-header bg-gradient bg-primary text-white rounded-top-4">
                     <h5 class="modal-title" id="contentBlockModalLabel">
                         <i class="fa fa-pencil-alt me-2"></i> Add Content Block
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body bg-light">
+                <div class="modal-body bg-light p-4">
 
                     <input type="hidden" id="contentBlockId" name="contentBlockId" value="">
                     <input type="hidden" id="national_park_translation_id" name="national_park_translation_id" value="{{ $np_translation_id }}">
@@ -37,10 +37,11 @@
                                 <i class="fa fa-pen-nib me-1 text-primary"></i> Title <span class="text-danger">*</span>
                             </label>
                             <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title" required>
+                            <div class="invalid-feedback">Title is required.</div>
                         </div>
                         <div class="col-md-6">
                             <label for="section_type" class="form-label">
-                                <i class="fa fa-layer-group me-1 text-primary"></i> Section Type
+                                <i class="fa fa-layer-group me-1 text-primary"></i> Section Type <span class="text-danger">*</span>
                             </label>
                             <select class="form-select" id="section_type" name="section_type" required>
                                 <option value="">Select Section Type</option>
@@ -49,6 +50,7 @@
                                 <option value="other">Other</option>
                                 <option value="journey">Journey</option>
                             </select>
+                            <div class="invalid-feedback">Please select a section type.</div>
                         </div>
                         <div class="col-md-6">
                             <label for="icon" class="form-label">
@@ -75,14 +77,14 @@
                             <label for="description" class="form-label">
                                 <i class="fa fa-align-left me-1 text-primary"></i> Description
                             </label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Description"></textarea>
                         </div>
 
                         <div class="col-md-6">
                             <label for="sort_order" class="form-label">
                                 <i class="fa fa-sort-numeric-down me-1 text-primary"></i> Sort Order
                             </label>
-                            <input type="number" class="form-control" id="sort_order" name="sort_order" value="0" min="0">
+                            <input type="number" class="form-control" id="sort_order" name="sort_order" value="0" min="0" placeholder="Sort Order">
                         </div>
 
                         <div class="col-md-6 d-flex align-items-center mt-4">
@@ -95,18 +97,19 @@
                         </div>
                     </div>
 
+                    <div id="formErrors" class="alert alert-danger d-none mt-3"></div>
                 </div>
-                <div class="modal-footer bg-light">
+                <div class="modal-footer bg-light border-0 rounded-bottom-4">
 
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fa fa-times me-1"></i> Cancel
                     </button>
                     <button type="submit" class="btn btn-success" id="saveBtn">
                         <i class="fa fa-save me-1"></i> Save
                     </button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 

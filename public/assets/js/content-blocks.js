@@ -6,15 +6,17 @@ $(document).ready(function () {
 
     let editingId = null;
 
-    function resetForm() {
+    function clearForm() {
         contentBlockForm[0].reset();
         $('#contentBlockId').val('');
         $('#is_active').prop('checked', true);
+        $('#formErrors').addClass('d-none').empty();
+        contentBlockForm.removeClass('was-validated');
     }
 
     // Handle add new button click
     $('#btnAdd').on('click', function () {
-        resetForm();
+        clearForm();
         editingId = null;
         contentBlockModalLabel.text('Add Content Block');
         contentBlockModal.show();
@@ -47,7 +49,15 @@ $(document).ready(function () {
     // Handle form submit
     contentBlockForm.on('submit', function (e) {
         e.preventDefault();
+
+        if (!this.checkValidity()) {
+            e.stopPropagation();
+            $(this).addClass('was-validated');
+            return;
+        }
+
         saveBtn.prop('disabled', true);
+        $('#formErrors').addClass('d-none').empty();
 
         const data = {
             title: $('#title').val(),
@@ -80,8 +90,23 @@ $(document).ready(function () {
                 contentBlockModal.hide();
                 $('#content-blocks-table').DataTable().ajax.reload(null, false);
             })
-            .catch(function () {
-                toastr.error('Failed to save content block');
+            .catch(function (error) {
+                if (error.response && error.response.data) {
+                    const res = error.response.data;
+                    if (res.errors) {
+                        let messages = Object.values(res.errors).flat().join('<br>');
+                        showErrors(messages);
+                        toastr.error('Please correct the form errors.');
+                    } else if (res.message) {
+                        showErrors(res.message);
+                        toastr.error(res.message);
+                    } else {
+                        showErrors('An unexpected error occurred.');
+                        toastr.error('Unexpected error.');
+                    }
+                } else {
+                    toastr.error('Failed to save content block');
+                }
             })
             .finally(function () {
                 saveBtn.prop('disabled', false);
@@ -102,4 +127,8 @@ $(document).ready(function () {
                 toastr.error('Failed to delete content block');
             });
     });
+
+    function showErrors(message) {
+        $('#formErrors').removeClass('d-none').html(message);
+    }
 });

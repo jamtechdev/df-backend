@@ -1,55 +1,65 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid mt-5">
+<div class="container-fluid flex-grow-1 container-p-y">
     <div class="row">
-       <div class="col-md-12">
-         <div class="d-flex justify-content-between mb-3">
-            <h4>Projects & Assigned Users</h4>
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="card">
+                <h5 class="card-header bg-primary text-white d-flex justify-content-between align-items-center">Project Users</h5>
+                <div class="card-body">
+                    {!! $dataTable->table(['class' => 'table table-bordered table-striped', 'id' => 'nationalParksTable'], true) !!}
+                </div>
+            </div>
         </div>
-        <div class="theme-table">
-            <table class="table" id="projectTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Project</th>
-                        <th>User</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="projectTableBody"></tbody>
-            </table>
-        </div>
-       </div>
     </div>
 </div>
 
 <!-- Assign User Modal -->
-<div class="modal fade" id="createProjectModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="assignUsersForm">
-                <div class="modal-header">
-                    <h5 id="modalTitle">Assign User to Project</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered"> <!-- XL Modal for Big Size -->
+        <form id="assignUsersForm" novalidate>
+            <div class="modal-content rounded-4 shadow-lg">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title" id="modalTitle">Assign User to Project</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <select id="projectSelect" class="form-select mb-2" required></select>
-                    <select id="userSelect" class="form-select mb-2" required></select>
-                    <div class="role-container" style="display:none;">
-                        <input id="roleInput" name="role" class="form-control mb-2" required/>
+                <div class="modal-body bg-light p-4">
+                    <div class="row">
+                        <div class="col-12 mb-2">
+                            <select id="projectSelect" class="form-select" required>
+                                <option value="">Select Project</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a project.</div>
+                        </div>
+
+                        <div class="col-12 mb-2">
+                            <select id="userSelect" class="form-select" required>
+                                <option value="">Select User</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a user.</div>
+                        </div>
+
+                        <!-- Radio Buttons for Role (Dynamic) -->
+                        <div class="col-12 role-container d-none mt-3">
+                            <label class="form-label">Select Role:</label>
+                            <div id="roleRadioGroup" class="d-flex flex-wrap gap-3"></div> <!-- Radio buttons render here -->
+                            <div class="invalid-feedback">Role is required.</div>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                <div class="modal-footer bg-light border-0 rounded-bottom-4">
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times me-1"></i>Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save me-1"></i>Save
+                    </button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
+
 
 <!-- Permissions Modal -->
 <div class="modal fade" id="permissionsModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -71,8 +81,8 @@
                     <div id="permissionsList" class="row gy-2"></div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save Permissions</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </form>
@@ -89,6 +99,11 @@
 </div>
 @endsection
 
+
+
 @push('scripts')
+{!! $dataTable->scripts() !!}
 <script src="{{ asset('assets/js/project.js') }}"></script>
+
+
 @endpush

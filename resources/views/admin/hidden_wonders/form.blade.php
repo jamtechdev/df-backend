@@ -76,7 +76,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">{{ isset($hiddenWonder) ? 'Update' : 'Create' }}</button>
-        <a href="{{ route('admin.hidden-wonders.index') }}" class="btn btn-secondary">Cancel</a>
+        <a href="{{ route('admin.hidden-wonders.index') }}" class="btn btn-info">Cancel</a>
     </form>
 </div>
 @endsection

@@ -6,21 +6,26 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Services\VisitorService;
+use App\DataTables\VisitorDataTable;
 
 class VisitorController extends Controller
 {
     protected $visitorService;
+    protected $visitorDataTable;
 
-    public function __construct(VisitorService $visitorService)
+    public function __construct(VisitorService $visitorService, VisitorDataTable $visitorDataTable)
     {
         $this->visitorService = $visitorService;
+        $this->visitorDataTable = $visitorDataTable;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $visitors = $this->visitorService->getVisitors();
-            return view('admin.visitor.index', compact('visitors'));
+            if ($request->ajax()) {
+                return $this->visitorDataTable->ajax();
+            }
+            return $this->visitorDataTable->render('admin.visitor.index');
         } catch (\Exception $e) {
             Log::error('Error fetching visitors: ' . $e->getMessage());
             return redirect()->back()->withErrors('Failed to load visitors.');
@@ -29,13 +34,8 @@ class VisitorController extends Controller
 
     public function fetchData()
     {
-        try {
-            $visitors = $this->visitorService->getVisitors();
-            return response()->json(['visitors' => $visitors]);
-        } catch (\Exception $e) {
-            Log::error('Error fetching visitors data: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to fetch visitors data'], 500);
-        }
+        // No longer needed, handled by VisitorDataTable ajax method
+        abort(404);
     }
 
     public function destroy($id)

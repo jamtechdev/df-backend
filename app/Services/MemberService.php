@@ -9,21 +9,23 @@ use Spatie\Permission\Models\Role;
 
 class MemberService
 {
-    // Allowed roles for member management
-    protected array $allowedRoles = ['content_manager', 'manager'];
+    /**
+     * Allowed roles for members.
+     */
+    private const ALLOWED_ROLES = ['content_manager', 'manager'];
 
     /**
-     * Get all members with allowed roles only.
+     * Get all members with allowed roles.
      */
-    public function getAllMembers()
+    public function getAllMembers(): \Illuminate\Support\Collection
     {
         return User::whereHas('roles', function ($query) {
-            $query->whereIn('name', $this->allowedRoles);
+            $query->whereIn('name', self::ALLOWED_ROLES);
         })->with('roles')->get();
     }
 
     /**
-     * Create a new member.
+     * Create a new member with validated data and assign roles.
      */
     public function createMember(array $data): User
     {
@@ -40,22 +42,19 @@ class MemberService
     }
 
     /**
-     * Update an existing member.
+     * Update an existing member's data and roles.
      */
     public function updateMember(User $user, array $data): User
     {
-        // Only fill allowed fields
         $updateData = Arr::only($data, ['first_name', 'last_name', 'email']);
 
-        // If password is set and not empty, hash and include it
         if (!empty($data['password'])) {
             $updateData['password'] = Hash::make($data['password']);
         }
 
         $user->update($updateData);
 
-        // Sync roles if provided
-        if (isset($data['roles'])) {
+        if (array_key_exists('roles', $data)) {
             $this->assignRoles($user, $data['roles']);
         }
 
@@ -63,7 +62,7 @@ class MemberService
     }
 
     /**
-     * Delete a member.
+     * Delete the specified member.
      */
     public function deleteMember(User $user): bool
     {
@@ -73,9 +72,10 @@ class MemberService
     /**
      * Assign only allowed roles to the user.
      */
-    protected function assignRoles(User $user, array $roles): void
+    private function assignRoles(User $user, array|string $roles): void
     {
-        $filteredRoles = array_intersect($roles, $this->allowedRoles);
-        $user->syncRoles($filteredRoles);
+        $roles = (array) $roles; // Ensure $roles is always an array
+        $validRoles = array_intersect($roles, self::ALLOWED_ROLES);
+        $user->syncRoles($validRoles);
     }
 }

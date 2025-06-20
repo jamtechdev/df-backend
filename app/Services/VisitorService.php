@@ -8,7 +8,7 @@ class VisitorService
 {
     public function getVisitors()
     {
-        return User::role('reader')->get();
+        return User::role('reader');
     }
 
     public function deleteVisitor($id)

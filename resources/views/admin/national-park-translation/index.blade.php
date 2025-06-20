@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-lg-12 mb-4 order-0">
             <div class="card">
-                <h5 class="card-header">National Parks translations</h5>
+                <h5 class="card-header bg-primary text-white d-flex justify-content-between align-items-center">National Parks translations</h5>
                 <div class="card-body">
                     {!! $dataTable->table(['class' => 'table table-bordered table-striped', 'id' => 'nPTranslationTable'], true) !!}
                 </div>
@@ -30,7 +30,7 @@
 <script>
     window.globalNationalParkId = {{$national_park_id ?? 'null'}};
 </script>
+<script src="{{ asset('assets/js/national-park-translations.js') }}"></script>
 {!! $dataTable->scripts() !!}
-{{-- <script src="{{ asset('assets/js/national-park-translations.js') }}"></script> --}}
 
 @endpush

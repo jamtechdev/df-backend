@@ -14,31 +14,29 @@ $(document).ready(function () {
         $('#projectId').html(options);
     }
 
-    function updateRolesCheckboxes(projectId) {
-        $('input[name="roles[]"]').prop('checked', false);
+    function updateRolesRadioButtons(projectId) {
+        $('input[name="roles"]').prop('checked', false);
         if (projectId && projectRolesMap[projectId]) {
-            const roles = projectRolesMap[projectId];
-            roles.forEach(role => {
-                $(`input[name="roles[]"][value="${role}"]`).prop('checked', true);
-            });
+            const role = projectRolesMap[projectId][0]; // only one role expected
+            $(`input[name="roles"][value="${role}"]`).prop('checked', true);
         }
     }
 
+    // New Member Modal Open
     $('#openCreateMemberModal').click(function () {
-        console.log('hello');
-        
         isEditMode = false;
         editMemberId = null;
         projectRolesMap = {};
-        $('#memberModalTitle').text('Add Member');
-        $('#memberForm')[0].reset();
+        clearForm();
+        $('#memberModalLabel').text('Add Member');
         $('#passwordGroup').show();
         $('#password').attr('required', true);
         loadProjects();
-        updateRolesCheckboxes(null);
+        updateRolesRadioButtons(null);
         $('#memberModal').modal('show');
     });
 
+    // Edit Member Modal Open
     $(document).on('click', '.edit-btn', function () {
         isEditMode = true;
         editMemberId = $(this).data('id');
@@ -49,12 +47,9 @@ $(document).ready(function () {
                 const member = res.data.member;
                 const projectsWithRoles = res.data.projects_with_roles;
 
-                $('#memberModalTitle').text('Edit Member');
+                fillForm(member);
+                $('#memberModalLabel').text('Edit Member');
                 $('#saveMemberBtn').text('Update Member');
-                $('#memberId').val(member.id);
-                $('#firstName').val(member.first_name);
-                $('#lastName').val(member.last_name);
-                $('#email').val(member.email);
                 $('#passwordGroup').hide();
                 $('#password').removeAttr('required');
 
@@ -64,7 +59,7 @@ $(document).ready(function () {
 
                 const selectedProjectId = projectsWithRoles.length ? projectsWithRoles[0].id : null;
                 loadProjects(selectedProjectId);
-                updateRolesCheckboxes(selectedProjectId);
+                updateRolesRadioButtons(selectedProjectId);
 
                 $('#memberModal').modal('show');
             })
@@ -74,11 +69,20 @@ $(document).ready(function () {
 
     $('#projectId').change(function () {
         const selectedProjectId = $(this).val();
-        updateRolesCheckboxes(selectedProjectId);
+        updateRolesRadioButtons(selectedProjectId);
     });
 
-    $(document).on('submit', '#memberForm', function (e) {
+    // Form Submit (Create or Update)
+    $('#memberForm').on('submit', function (e) {
         e.preventDefault();
+
+        if (!this.checkValidity()) {
+            e.stopPropagation();
+            $(this).addClass('was-validated');
+            return;
+        }
+
+        $('#formErrors').addClass('d-none').empty();
 
         const formData = {
             first_name: $('#firstName').val(),
@@ -86,7 +90,7 @@ $(document).ready(function () {
             email: $('#email').val(),
             password: $('#password').val(),
             project_id: $('#projectId').val(),
-            roles: $('input[name="roles[]"]:checked').map(function () { return this.value; }).get()
+            roles: $('input[name="roles"]:checked').val() // radio button — only one value
         };
 
         if (isEditMode && !formData.password) delete formData.password;
@@ -98,25 +102,67 @@ $(document).ready(function () {
             : axios.post('/users/members', formData);
 
         request.then(res => {
-            toastr.success(res.data.message);
             $('#memberModal').modal('hide');
+            $('#memberForm').removeClass('was-validated');
+            clearForm();
             $('#member-table').DataTable().ajax.reload(); // Reload DataTable
+            toastr.success(res.data.message);
         }).catch(err => {
-            toastr.error(err.response?.data?.message || 'Operation failed.');
+            if (err.response && err.response.data) {
+                const res = err.response.data;
+                if (res.errors) {
+                    let messages = Object.values(res.errors).flat().join('<br>');
+                    showErrors(messages);
+                    toastr.error('Please correct the form errors.');
+                } else if (res.message) {
+                    showErrors(res.message);
+                    toastr.error(res.message);
+                } else {
+                    showErrors('An unexpected error occurred.');
+                    toastr.error('Unexpected error.');
+                }
+            } else {
+                toastr.error('Operation failed.');
+            }
         }).finally(() => hideLoader());
     });
 
+    // Delete Member
     $(document).on('click', '.delete-btn', function () {
         if (confirm('Are you sure?')) {
             const memberId = $(this).data('id');
             showLoader();
             axios.delete(`/users/members/${memberId}`)
                 .then(res => {
-                    toastr.success(res.data.message);
                     $('#member-table').DataTable().ajax.reload(); // Reload DataTable
+                    toastr.success(res.data.message);
                 })
                 .catch(() => toastr.error('Delete failed.'))
                 .finally(() => hideLoader());
         }
     });
+
+    // Helpers
+    function clearForm() {
+        $('#memberId').val('');
+        $('#memberForm')[0].reset();
+        $('#memberForm').removeClass('was-validated');
+        $('#formErrors').addClass('d-none').empty();
+    }
+
+    function fillForm(data) {
+        $('#memberId').val(data.id || '');
+        $('#firstName').val(data.first_name || '');
+        $('#lastName').val(data.last_name || '');
+        $('#email').val(data.email || '');
+        $('#password').val('');
+        $('#projectId').val(data.project_id || '');
+        // Roles radio will be updated separately
+        $('#formErrors').addClass('d-none').empty();
+        $('#memberForm').removeClass('was-validated');
+    }
+
+    function showErrors(message) {
+        $('#formErrors').removeClass('d-none').html(message);
+    }
 });

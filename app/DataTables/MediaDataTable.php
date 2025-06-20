@@ -108,7 +108,7 @@ class MediaDataTable extends DataTable
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('
-            <"row"<"col-md-6 d-flex justify-content-start"f><"col-sm-12 col-md-6 d-flex align-items-center justify-content-end"lB>>
+            <"row"<"col-md-6 d-flex justify-content-start mb-2"f><"col-sm-12 col-md-6 d-flex align-items-center justify-content-end"lB>>
             <"row"<"col-md-12"tr>>
             <"row"<"col-md-6"i><"col-md-6"p>>
         ')

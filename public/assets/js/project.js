@@ -1,135 +1,112 @@
 $(document).ready(function () {
-    let editPivotId = null; // Pivot table 'id'
+    let editPivotId = null;
     let editProjectId = null;
     let editUserId = null;
+    const allRoles = ['content_manager', 'manager']; // Fixed Roles to show always
 
     function showLoader() { $('#loader').show(); }
     function hideLoader() { $('#loader').hide(); }
+
+
 
     function fetchProjects() {
         showLoader();
         axios.get('/projects/permissions/data')
             .then(response => {
-                const projects = response.data.project_user_roles;
+                const projects = response.data.projects; // Use all projects from backend
+                const projectRoles = response.data.project_user_roles;
                 const users = response.data.users;
-
-                renderTable(projects);
+                window.projectsData = projects; // Store projects globally for reuse
                 renderUserOptions(users);
-                renderProjectOptions(projects);
+                renderProjectOptions(projects, projectRoles);
             })
-            .catch(() => {
-                toastr.error('Failed to fetch data.');
-            })
-            .finally(() => {
-                hideLoader();
-            });
+            .catch(() => toastr.error('Failed to fetch data.'))
+            .finally(() => hideLoader());
     }
-
-    function renderTable(projects) {
-        let tbody = '';
-        let row = 1;
-        projects.forEach(data => {
-            // Convert role to readable form:
-            const roleReadable = formatRole(data.role);
-
-            tbody += `<tr>
-            <td>${row++}</td>
-            <td>${data.project_name}</td>
-            <td>${data.user_name}</td>
-            <td>${data.email}</td>
-            <td>${roleReadable}</td> <!-- Changed this line -->
-            <td>
-                <button class="btn btn-sm btn-primary edit-btn" 
-                    data-project="${data.project_id}" 
-                    data-id="${data.id}"   
-                    data-user="${data.user_id}" 
-                    data-role="${data.role}">
-                    Edit
-                </button>
-                <button class="btn btn-sm btn-outline-success me-1 permission-btn" 
-                    data-project="${data.project_id}" 
-                    data-user="${data.user_id}" 
-                    data-role="${data.role}" 
-                    title="Permissions">
-                    <i class="fas fa-user-shield"></i>
-                </button>
-                <button class="btn btn-sm btn-danger delete-btn" 
-                    data-project="${data.project_id}" 
-                    data-user="${data.user_id}">
-                    <i class="fa-solid fa-trash me-2"></i>
-                    Delete
-                </button>
-            </td>
-        </tr>`;
-        });
-        $('#projectTableBody').html(tbody);
-    }
-
-    // helper function to format role
-    function formatRole(role) {
-        if (!role) return '';
-        return role.replace(/_/g, ' ')
-            .replace(/\b\w/g, l => l.toUpperCase()); // capitalize first letters
-    }
-
 
     function renderUserOptions(users) {
         let options = '<option value="">Select User</option>';
-        users.forEach(user => {
+        // Filter users to only those with roles content_manager or manager
+        const filteredUsers = users.filter(user => {
+            const roles = user.roles || [];
+            return roles.includes('content_manager') || roles.includes('manager');
+        });
+        filteredUsers.forEach(user => {
             options += `<option value="${user.id}">${user.first_name} ${user.last_name}</option>`;
         });
         $('#userSelect').html(options);
     }
 
-    function renderProjectOptions(projects) {
+    function renderProjectOptions(projects, projectRoles, selectedProjectId = '') {
+        console.log(projects, projectRoles);
+
         let uniqueProjects = [];
         projects.forEach(project => {
             if (!uniqueProjects.some(p => p.project_id === project.project_id)) {
-                uniqueProjects.push({ project_id: project.project_id, project_name: project.project_name });
+                uniqueProjects.push({ project_id: project.id, project_name: project.name });
             }
         });
+        console.log(uniqueProjects);
 
         let options = '<option value="">Select Project</option>';
         uniqueProjects.forEach(project => {
-            options += `<option value="${project.project_id}">${project.project_name}</option>`;
+            const selected = (project.project_id == selectedProjectId) ? 'selected' : '';
+            options += `<option value="${project.project_id}" ${selected}>${project.project_name}</option>`;
         });
         $('#projectSelect').html(options);
     }
 
+    function renderRoleRadios(selectedRole = '') {
+        let html = '';
+        allRoles.forEach(role => {
+            const checked = (role === selectedRole) ? 'checked' : '';
+            html += `
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="role" id="role_${role}" value="${role}" ${checked} required>
+                    <label class="form-check-label" for="role_${role}">${role.replace('_', ' ')}</label>
+                </div>`;
+        });
+        $('#roleRadioGroup').html(html);
+        $('.role-container').removeClass('d-none');
+    }
+
     $(document).on('click', '.edit-btn', function () {
-        editPivotId = $(this).data('id'); // Pivot ID here
+        editPivotId = $(this).data('id');
         editProjectId = $(this).data('project');
         editUserId = $(this).data('user');
-        const role = $(this).data('role');
+        const roleAttached = $(this).data('role'); // this comes from your table's data-role
+
+        console.log('editProjectId:', editProjectId, 'type:', typeof editProjectId);
+        console.log('window.projectsData:', window.projectsData);
 
         $('#modalTitle').text('Edit User Assignment');
-        $('#projectSelect').val(editProjectId).prop('disabled', false);
+        renderProjectOptions(window.projectsData, null, editProjectId); // Re-render projects with selected project
+        $('#projectSelect').prop('disabled', false);
         $('#userSelect').val(editUserId).prop('disabled', false);
-        $('#roleInput').val(role).closest('.role-container').show();
-        $('#createProjectModal').modal('show');
+
+        renderRoleRadios(roleAttached); // Always render fixed roles
+
+        const createModalEl = document.getElementById('createProjectModal');
+        const createModal = bootstrap.Modal.getInstance(createModalEl) || new bootstrap.Modal(createModalEl);
+        createModal.show();
     });
 
     $(document).on('change', '#userSelect', function () {
-        const userId = $(this).val();
-        if (userId) {
-            axios.get(`/user/${userId}/roles`)
-                .then(res => {
-                    const roles = res.data.roles.join(', ');
-                    $('#roleInput').val(roles);
-                    $('.role-container').show();
-                })
-                .catch(() => toastr.error('Failed to fetch user role.'));
-        } else {
-            $('#roleInput').val('');
-            $('.role-container').hide();
-        }
+        renderRoleRadios(); // When user changes, show both roles but none selected
     });
 
     $('#assignUsersForm').submit(function (e) {
         e.preventDefault();
+
+        if (!this.checkValidity()) {
+            e.stopPropagation();
+            $(this).addClass('was-validated');
+            return;
+        }
+
         const project_id = $('#projectSelect').val();
         const user_id = $('#userSelect').val();
-        const role = $('#roleInput').val();
+        const role = $('input[name="role"]:checked').val();
 
         if (!project_id || !user_id || !role) {
             toastr.warning('Please fill all fields.');
@@ -138,22 +115,18 @@ $(document).ready(function () {
 
         showLoader();
 
-        // PUT Request for Edit only
-        axios.put(`/projects/permissions/${editPivotId}`, {
-            project_id,
-            user_id,
-            role
-        })
+        axios.put(`/projects/permissions/${editPivotId}`, { project_id, user_id, role })
             .then(res => {
                 toastr.success(res.data.message || 'Assignment updated!');
-                $('#createProjectModal').modal('hide');
-                fetchProjects();
+                const createModalEl = document.getElementById('createProjectModal');
+                const createModal = bootstrap.Modal.getInstance(createModalEl);
+                if (createModal) createModal.hide();
+                $('#projectTable').DataTable().ajax.reload(null, false);
             })
-            .catch(err => {
-                toastr.error(err.response?.data?.message || 'Update failed.');
-            })
+            .catch(err => toastr.error(err.response?.data?.message || 'Update failed.'))
             .finally(() => hideLoader());
     });
+
 
     $(document).on('click', '.delete-btn', function () {
         if (confirm('Are you sure?')) {
@@ -164,16 +137,18 @@ $(document).ready(function () {
             axios.delete(`/projects/permissions/${project_id}/${user_id}`)
                 .then(res => {
                     toastr.success(res.data.message || 'User removed!');
-                    fetchProjects();
+                    $('#projectTable').DataTable().ajax.reload(null, false);
                 })
-                .catch(err => {
-                    toastr.error(err.response?.data?.message || 'Delete failed.');
-                })
+                .catch(err => toastr.error(err.response?.data?.message || 'Delete failed.'))
                 .finally(() => hideLoader());
         }
     });
 
-    // === PERMISSIONS MODAL ===
+
+
+
+
+
     $(document).on('click', '.permission-btn', function () {
         const userId = $(this).data('user');
         const roleName = $(this).data('role');
@@ -205,9 +180,7 @@ $(document).ready(function () {
 
                 $('#permissionsList').html(html);
             })
-            .catch(() => {
-                $('#permissionsList').html('<p class="text-danger">Failed to load permissions.</p>');
-            });
+            .catch(() => $('#permissionsList').html('<p class="text-danger">Failed to load permissions.</p>'));
     });
 
     $('#permissionsForm').submit(function (e) {
@@ -221,17 +194,23 @@ $(document).ready(function () {
             selectedPermissions.push($(this).val());
         });
 
+        showLoader();
+
         axios.post(`/roles/${roleName}/permissions/update`, {
             user_id: userId,
             permissions: selectedPermissions
         })
             .then(res => {
                 toastr.success(res.data.message || 'Permissions updated successfully.');
-                $('#permissionsModal').modal('hide');
+
+                const permModalEl = document.getElementById('permissionsModal');
+                const permModal = bootstrap.Modal.getInstance(permModalEl);
+                if (permModal) permModal.hide();
+
+                $('#projectTable').DataTable().ajax.reload(null, false);
             })
-            .catch(err => {
-                toastr.error(err.response?.data?.message || 'Failed to update permissions.');
-            });
+            .catch(err => toastr.error(err.response?.data?.message || 'Failed to update permissions.'))
+            .finally(() => hideLoader());
     });
 
     fetchProjects();

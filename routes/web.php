@@ -23,39 +23,10 @@ Auth::routes(['register' => false, 'reset' => false]);
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/user/{user}/roles', [ProjectUserController::class, 'getUserRoles']);
-
     Route::get('/roles/{role}/permissions', [RolePermissionController::class, 'getPermissions']);
     Route::post('/roles/{role}/permissions/update', [RolePermissionController::class, 'updatePermissions']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-    // Media CRUD
-    Route::prefix('media')->group(function () {
-        Route::get('/{id}', [MediaController::class, 'index'])->name('media.index');
-        Route::get('{id}/create', [MediaController::class, 'create'])->name('media.create');
-        Route::post('{id}/store', [MediaController::class, 'store'])->name('media.store');
-        Route::get('{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
-        Route::post('{id}/{media}/update', [MediaController::class, 'update'])->name('media.update');
-        Route::delete('{id}/{media}/delete', [MediaController::class, 'destroy'])->name('media.destroy');
-
-
-
-
-        Route::prefix('/translations')->group(function () {
-            Route::get('{media}/', [MediaTranslationController::class, 'index'])->name('media.translations.index');
-            Route::get('{media_translation}/edit', [MediaTranslationController::class, 'edit'])->name('media.translations.edit');
-            Route::post('{media}/store', [MediaTranslationController::class, 'store'])->name('media.translations.store');
-            Route::post('{media_translation}/update-trans', [MediaTranslationController::class, 'updateTranslation'])->name('media.translations.update');
-            Route::delete('{media_translation}/delete', [MediaTranslationController::class, 'destroy'])->name('media.translations.destroy');
-        });
-
-
-        // 🔥 Toggle is_gallery_visual (for checkbox toggle in DataTable)
-        Route::post('/toggle-gallery-visual', [MediaController::class, 'toggleGalleryVisual'])->name('media.toggle-gallery-visual');
-        // 🔥 Toggle status switch (new toggle method)
-        Route::post('/toggle-status-switch', [MediaController::class, 'toggleStatusSwitch'])->name('media.toggle-status-switch');
-    });
-
-    // Project Permissions
     Route::prefix('projects')->group(function () {
         Route::prefix('permissions')->group(function () {
             Route::get('/', [ProjectUserController::class, 'index'])->name('projects.permissions.index');
@@ -65,11 +36,13 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}/{user_id}', [ProjectUserController::class, 'destroy'])->name('projects.permissions.destroy');
         });
     });
-
-
-    // ✅ Users → Members & Visitors CRUD
+    Route::prefix('themes')->group(function () {
+        Route::get('/', [ThemeController::class, 'index'])->name('themes.index');
+        Route::post('/', [ThemeController::class, 'store'])->name('themes.store'); // ✅ FIXED
+        Route::post('/{id}', [ThemeController::class, 'update'])->name('themes.update'); // Using POST + _method=PUT
+        Route::delete('/{id}', [ThemeController::class, 'destroy'])->name('themes.delete');
+    });
     Route::prefix('users')->group(function () {
-
         // Members CRUD
         Route::prefix('members')->group(function () {
             Route::get('/', [MemberController::class, 'index'])->name('members.index');
@@ -91,7 +64,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
 
-    // National Parks CRUD
+    
+
+    
     Route::prefix('national-parks')->group(function () {
         Route::get('/', [NationalParkController::class, 'index'])->name('national-parks.index');
         Route::get('/fetch-data', [NationalParkController::class, 'fetchData'])->name('national-parks.fetchData');
@@ -134,12 +109,25 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('{np_translation_id}/{content_block}/delete', [\App\Http\Controllers\Admin\ContentBlockController::class, 'destroy'])->name('national-parks.content-blocks.destroy');
         });
     });
+    Route::prefix('media')->group(function () {
+        Route::get('/{id}', [MediaController::class, 'index'])->name('media.index');
+        Route::get('{id}/create', [MediaController::class, 'create'])->name('media.create');
+        Route::post('{id}/store', [MediaController::class, 'store'])->name('media.store');
+        Route::get('{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
+        Route::post('{id}/{media}/update', [MediaController::class, 'update'])->name('media.update');
+        Route::delete('{id}/{media}/delete', [MediaController::class, 'destroy'])->name('media.destroy');
+        Route::prefix('/translations')->group(function () {
+            Route::get('{media}/', [MediaTranslationController::class, 'index'])->name('media.translations.index');
+            Route::get('{media_translation}/edit', [MediaTranslationController::class, 'edit'])->name('media.translations.edit');
+            Route::post('{media}/store', [MediaTranslationController::class, 'store'])->name('media.translations.store');
+            Route::post('{media_translation}/update-trans', [MediaTranslationController::class, 'updateTranslation'])->name('media.translations.update');
+            Route::delete('{media_translation}/delete', [MediaTranslationController::class, 'destroy'])->name('media.translations.destroy');
+        });
 
-    // theme CRUD
-    Route::prefix('themes')->group(function () {
-        Route::get('/', [ThemeController::class, 'index'])->name('themes.index');
-        Route::post('/', [ThemeController::class, 'store'])->name('themes.store'); // ✅ FIXED
-        Route::post('/{id}', [ThemeController::class, 'update'])->name('themes.update'); // Using POST + _method=PUT
-        Route::delete('/{id}', [ThemeController::class, 'destroy'])->name('themes.delete');
+
+        // 🔥 Toggle is_gallery_visual (for checkbox toggle in DataTable)
+        Route::post('/toggle-gallery-visual', [MediaController::class, 'toggleGalleryVisual'])->name('media.toggle-gallery-visual');
+        // 🔥 Toggle status switch (new toggle method)
+        Route::post('/toggle-status-switch', [MediaController::class, 'toggleStatusSwitch'])->name('media.toggle-status-switch');
     });
 });

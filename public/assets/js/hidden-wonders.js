@@ -5,24 +5,24 @@ $(document).ready(function () {
     function showLoader() { $('#loader').show(); }
     function hideLoader() { $('#loader').hide(); }
 
-    function resetForm() {
+    function clearForm() {
         $('#hiddenWonderForm')[0].reset();
         editHiddenWonderId = null;
         isEditMode = false;
         $('#hiddenWonderModalLabel').text('Add Hidden Wonder');
+        $('#formErrors').addClass('d-none').empty();
+        $('#hiddenWonderForm').removeClass('was-validated');
         $('#is_active').prop('checked', false);
     }
 
     $('#createHiddenWonderBtn').click(function () {
-        resetForm();
+        clearForm();
         $('#hiddenWonderModal').modal('show');
     });
 
     $(document).on('click', '.edit-hidden-wonder', function (e) {
         e.preventDefault();
         const id = $(this).data('id');
-        console.log("Edit ID:", id);
-        // Replace 'ID_PLACEHOLDER' in the edit URL
         let editUrl = window.hiddenWonderRoutes.edit.replace('ID_PLACEHOLDER', id);
         showLoader();
         axios.get(editUrl)
@@ -45,9 +45,8 @@ $(document).ready(function () {
                 $('#is_active').prop('checked', hiddenWonder.is_active ? true : false);
                 $('#hiddenWonderModal').modal('show');
             })
-            .catch(function (error) {
+            .catch(function () {
                 toastr.error('Failed to fetch hidden wonder data.');
-                console.error('Error:', error);
             })
             .finally(function () {
                 hideLoader();
@@ -56,6 +55,15 @@ $(document).ready(function () {
 
     $('#hiddenWonderForm').submit(function (e) {
         e.preventDefault();
+
+        if (!this.checkValidity()) {
+            e.stopPropagation();
+            $(this).addClass('was-validated');
+            return;
+        }
+
+        $('#formErrors').addClass('d-none').empty();
+
         let url = isEditMode
             ? window.hiddenWonderRoutes.update.replace('ID_PLACEHOLDER', editHiddenWonderId)
             : window.hiddenWonderRoutes.store;
@@ -91,8 +99,22 @@ $(document).ready(function () {
                 }
             })
             .catch(function (error) {
-                toastr.error('Error occurred while saving.');
-                console.error('Error:', error);
+                if (error.response && error.response.data) {
+                    const res = error.response.data;
+                    if (res.errors) {
+                        let messages = Object.values(res.errors).flat().join('<br>');
+                        showErrors(messages);
+                        toastr.error('Please correct the form errors.');
+                    } else if (res.message) {
+                        showErrors(res.message);
+                        toastr.error(res.message);
+                    } else {
+                        showErrors('An unexpected error occurred.');
+                        toastr.error('Unexpected error.');
+                    }
+                } else {
+                    toastr.error('Error occurred while saving.');
+                }
             })
             .finally(function () {
                 hideLoader();
@@ -110,12 +132,15 @@ $(document).ready(function () {
                     $('#hiddenWondersTable').DataTable().ajax.reload(null, false);
                 }
             })
-            .catch(function (error) {
+            .catch(function () {
                 toastr.error('Failed to delete hidden wonder.');
-                console.error('Error:', error);
             })
             .finally(function () {
                 hideLoader();
             });
     });
+
+    function showErrors(message) {
+        $('#formErrors').removeClass('d-none').html(message);
+    }
 });

@@ -1,218 +1,127 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-       
-.dashboard .icon{
-  background: #02afff;
-  border-radius: 5px;
-  font-size: 20px;
-  width: 50px;
-  height: 50px;
-  color: #fff;
-     display: flex;
-    color: #fff;
-    align-items: center;
-    justify-content: center;
-}
+<style>
+    .dashboard .card {
+        border: 1px solid transparent;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        position: relative;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease-in-out;
+        overflow: hidden;
+    }
 
-.dashboard .card .fa-chevron-right {
-  font-size: 20px;
-  color: #000;
-}
+    .dashboard .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
 
+    .dashboard .icon {
+        background: linear-gradient(135deg, var(--bs-primary), var(--bs-info));
+        color: #fff;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        margin-right: 15px;
+    }
 
-.dashboard .icon i{
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
+    .dashboard h3 {
+        font-size: 1.1rem;
+        margin: 0;
+        font-weight: 600;
+        color: var(--bs-gray-800);
+    }
 
-.dashboard  .card-info{
-  border-top: 1px solid #eee;
-  margin-top: 20px;
-  padding-top: 10px;
-}
+    .dashboard .card-info {
+        border-top: 1px solid var(--bs-gray-300);
+        margin-top: 20px;
+        padding-top: 10px;
+    }
 
-.dashboard   h3{
-  font-size: 20px;
-  padding-left: 10px;
-}
+    .dashboard .card-info h5 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--bs-primary);
+    }
 
-    </style>
+    .dashboard .background-circle {
+        position: absolute;
+        bottom: -30px;
+        right: -30px;
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, var(--bs-primary), var(--bs-info));
+        opacity: 0.05;
+        border-radius: 50%;
+        z-index: 0;
+    }
 
-    <div class="container-fluid mt-5">
-        <!-- <h2 class="mb-4 fw-bold text-center text-dark">Dashboard Overview</h2> -->
-        <div class="row g-4 justify-content-center">
+    .dashboard .d-flex {
+        position: relative;
+        z-index: 1;
+    }
 
-            <!-- Total Users -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card p-3 shadow-sm dashboard">
-                    <div class="d-flex justify-content-between">
+    .no-access {
+        text-align: center;
+        margin-top: 50px;
+        color: var(--bs-gray-600);
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+</style>
+
+<div class="container-fluid mt-5">
+    <div class="row g-4 justify-content-center dashboard">
+        @php
+            $user = auth()->user();
+            $isAdmin = $user->hasRole('admin');
+            $assignedProjects = $user->projects()->count();
+        @endphp
+
+        @if ($isAdmin || $assignedProjects > 0)
+            @php
+                $cards = [
+                    ['icon' => 'fas fa-users', 'label' => 'Total Users', 'count' => $totalUsers],
+                    ['icon' => 'fas fa-list', 'label' => 'Total Categories', 'count' => $totalCategories],
+                    ['icon' => 'fas fa-tree', 'label' => 'National Parks', 'count' => $totalNationalParks],
+                    ['icon' => 'fas fa-user-tie', 'label' => 'Managers', 'count' => $totalManager],
+                    ['icon' => 'fas fa-user-edit', 'label' => 'Content Managers', 'count' => $totalContentManager],
+                    ['icon' => 'fas fa-user', 'label' => 'Readers', 'count' => $totalReader],
+                ];
+            @endphp
+
+            @foreach ($cards as $card)
+                <div class="col-md-6 col-lg-4">
+                    <div class="card p-4 shadow-sm position-relative">
+                        <div class="background-circle"></div>
                         <div class="d-flex align-items-center">
-                        <div class="icon">
-                           <i class="fas fa-users"></i>
+                            <div class="icon">
+                                <i class="{{ $card['icon'] }}"></i>
+                            </div>
+                            <h3>{{ $card['label'] }}</h3>
                         </div>
-                        <h3 class="">Total Users</h3>
+                        <div class="card-info">
+                            <h5 class="fw-bold">{{ $card['count'] }}</h5>
                         </div>
-                        
                     </div>
-                    <div class="card-info">
-                        <h5 class="fw-bold">{{ $totalUsers }}</h5>
-                    </div>
+                </div>
+            @endforeach
+
+        @else
+            <div class="col-12">
+                <div class="no-access">
+                    <i class="fas fa-lock fa-3x mb-3 text-primary"></i>
+                    <p>Your account access will be enabled soon. Please contact your administrator if this message persists.</p>
                 </div>
             </div>
-
-             <div class="col-md-6 col-lg-4">
-                <div class="card p-3 shadow-sm dashboard">
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex align-items-center">
-                        <div class="icon">
-                           <i class="fas fa-list"></i>
-                        </div>
-                        <h3 class="">Total Categories</h3>
-                        </div>
-                        
-                    </div>
-                    <div class="card-info">
-                        <h5 class="fw-bold">{{ $totalCategories }}</h5>
-                    </div>
-                </div>
-            </div>
-
-      <div class="col-md-6 col-lg-4">
-                <div class="card p-3 shadow-sm dashboard">
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex align-items-center">
-                        <div class="icon">
-                           <i class="fas fa-tree"></i>
-                        </div>
-                        <h3 class="">National Parks</h3>
-                        </div>
-                        
-                    </div>
-                    <div class="card-info">
-                        <h5 class="fw-bold">{{ $totalNationalParks }}</h5>
-                    </div>
-                </div>
-            </div>
-
-
-                  <div class="col-md-6 col-lg-4">
-                <div class="card p-3 shadow-sm dashboard">
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex align-items-center">
-                        <div class="icon">
-                           <i class="fas fa-user-tie"></i>
-                        </div>
-                        <h3 class="">Managers</h3>
-                        </div>
-                        
-                    </div>
-                    <div class="card-info">
-                        <h5 class="fw-bold">{{ $totalManager }}</h5>
-                    </div>
-                </div>
-            </div>
-
-
-                  <div class="col-md-6 col-lg-4">
-                <div class="card p-3 shadow-sm dashboard">
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex align-items-center">
-                        <div class="icon">
-                           <i class="fas fa-user-edit"></i>
-                        </div>
-                        <h3 class="">Content Managers</h3>
-                        </div>
-                        
-                    </div>
-                    <div class="card-info">
-                        <h5 class="fw-bold">{{ $totalContentManager }}</h5>
-                    </div>
-                </div>
-            </div>
-
-
-                  <div class="col-md-6 col-lg-4">
-                <div class="card p-3 shadow-sm dashboard">
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex align-items-center">
-                        <div class="icon">
-                           <i class="fas fa-user"></i>
-                        </div>
-                        <h3 class="">Readers</h3>
-                        </div>
-                        
-                    </div>
-                    <div class="card-info">
-                        <h5 class="fw-bold">{{ $totalReader }}</h5>
-                    </div>
-                </div>
-            </div>
-            <!-- 
-            <div class="col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-gradient-primary shadow text-center">
-                    <div class="card-body">
-                        <i class="fas fa-users dashboard-icon"></i>
-                        <h5>Total Users</h5>
-                        <h2 class="fw-bold">{{ $totalUsers }}</h2>
-                    </div>
-                </div>
-            </div>
-
-           
-            <div class="col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-gradient-info shadow text-center">
-                    <div class="card-body">
-                        <i class="fas fa-list dashboard-icon"></i>
-                        <h5>Total Categories</h5>
-                        <h2 class="fw-bold">{{ $totalCategories }}</h2>
-                    </div>
-                </div>
-            </div>
-
-          
-            <div class="col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-gradient-success shadow text-center">
-                    <div class="card-body">
-                        <i class="fas fa-tree dashboard-icon"></i>
-                        <h5>National Parks</h5>
-                        <h2 class="fw-bold">{{ $totalNationalParks }}</h2>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-gradient-success shadow text-center">
-                    <div class="card-body">
-                        <i class="fas fa-user-tie dashboard-icon"></i>
-                        <h5>Managers</h5>
-                        <h2 class="fw-bold">{{ $totalManager }}</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-gradient-success shadow text-center">
-                    <div class="card-body">
-                        <i class="fas fa-user-edit dashboard-icon"></i>
-                        <h5>Content Managers</h5>
-                        <h2 class="fw-bold">{{ $totalContentManager }}</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card dashboard-card bg-gradient-success shadow text-center">
-                    <div class="card-body">
-                        <i class="fas fa-user dashboard-icon"></i>
-                        <h5>Readers</h5>
-                        <h2 class="fw-bold">{{ $totalReader }}</h2>
-                    </div>
-                </div>
-            </div> -->
-        </div>
+        @endif
     </div>
+</div>
 @endsection
